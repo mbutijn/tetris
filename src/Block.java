@@ -3,25 +3,24 @@ import java.awt.geom.Point2D;
 
 public class Block {
 	int i,j;
-
 	private Position position = new Position();
-	private Color kleur;
+	private Color color;
 
-	Block(int i, int j, Color kleur){
+	Block(int i, int j, Color color){
 		this.i = i;
 		this.j = j;
-		this.kleur = kleur;
+		this.color = color;
 	}
 
 	void setPosition(int i, int j) {
-		this.position.setX(this.i*Grid.getDimension()+Grid.getDistance());
-		this.position.setY(this.j*Grid.getDimension()+Grid.getDistance());
+		this.position.setX(i*Grid.getDimension()+Grid.getDistance());
+		this.position.setY(j*Grid.getDimension()+Grid.getDistance());
 	}
 
 	void drop(Grid grid){
-		grid.setBezet(this.i, this.j, false);
+		grid.setHoldsBlock(this.i, this.j, false);
 		this.j++;
-		grid.setBezet(this.i, this.j, true);
+		grid.setHoldsBlock(this.i, this.j, true);
 	}
 
 	Integer getj() {
@@ -34,7 +33,7 @@ public class Block {
 
 	void draw(Graphics graphics){
 		float [] shine = {0.4f, 1.0f};
-		Color[] colors = {kleur, Color.BLACK};
+		Color[] colors = {color, Color.BLACK};
 		Graphics2D g2d = (Graphics2D) graphics;
 		setPosition(this.i, this.j);
 

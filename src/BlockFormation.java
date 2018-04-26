@@ -5,154 +5,148 @@ import java.util.List;
 class BlockFormation extends ArrayList<Block> {
 
 	private static final long serialVersionUID = 1L;
-	private Color kleur;
+	private Color color;
 	private char type;
-	private static List<Block> BlokLijst;
-	private int[] breedteindex, hoogteindex;
-	private int Ilinks, Jonder;
+	private static List<Block> blockList;
+	private int[] widthIndex, heightIndex;
+	private int I_left, J_under;
 
-	BlockFormation(int Ilinks, char type, Grid grid){
-		BlokLijst = new ArrayList<Block>();
-		this.Ilinks = Ilinks;
+	BlockFormation(int I_left, char type, Grid grid){
+		blockList = new ArrayList<>();
+		this.I_left = I_left;
 		this.type = type;
-		if (this.type == '-'){
-			this.breedteindex = new int[] {0, 1, 2, 3};
-			this.hoogteindex = new int[] {0, 0, 0, 0};
-			this.Jonder = 1;
-			kleur = new Color(0, 235, 235);
-		} else if (this.type == '.'){
-			this.breedteindex = new int[] {0, 1, 0, 1};
-			this.hoogteindex = new int[] {-1, -1, 0, 0};
-			this.Jonder = 2;
-			kleur = new Color(240, 240, 10);
-		} else if (this.type == 'L'){
-			this.breedteindex = new int[] {0, 0, 0, 1};
-			this.hoogteindex = new int[] {-2, -1, 0, 0};
-			this.Jonder = 3;
-			kleur = new Color(230, 140, 20);
-		} else if (this.type == 't'){
-			this.breedteindex = new int[] {0, 1, 1, 2};
-			this.hoogteindex = new int[] {0, 0, -1, 0};
-			this.Jonder = 2;
-			kleur = new Color(200, 0, 200);
-		} else if (this.type == 's'){
-			this.breedteindex = new int[] {0, 1, 1, 2};
-			this.hoogteindex = new int[] {0, 0, -1, -1};
-			this.Jonder = 2;
-			kleur = new Color(230, 20, 20);
-		} else if (this.type == 'z'){
-			this.breedteindex = new int[] {0, 1, 1, 2};
-			this.hoogteindex = new int [] {-1, -1, 0, 0};
-			this.Jonder = 2;
-			kleur = new Color(30, 240, 40);
-		} else if (this.type == '0'){
-			this.breedteindex = new int[] {1, 1, 1, 0};
-			this.hoogteindex = new int[] {-2, -1, 0, 0};
-			this.Jonder = 3;
-			kleur = new Color(30, 30, 255);
+		if (type == '-'){
+			widthIndex = new int[] {0, 1, 2, 3};
+			heightIndex = new int[] {0, 0, 0, 0};
+			J_under = 1;
+			color = new Color(0, 235, 235);
+		} else if (type == '.'){
+			widthIndex = new int[] {0, 1, 0, 1};
+			heightIndex = new int[] {-1, -1, 0, 0};
+			J_under = 2;
+			color = new Color(240, 240, 10);
+		} else if (type == 'L'){
+			widthIndex = new int[] {0, 0, 0, 1};
+			heightIndex = new int[] {-2, -1, 0, 0};
+			J_under = 3;
+			color = new Color(230, 140, 20);
+		} else if (type == 't'){
+			widthIndex = new int[] {0, 1, 1, 2};
+			heightIndex = new int[] {0, 0, -1, 0};
+			J_under = 2;
+			color = new Color(200, 0, 200);
+		} else if (type == 's'){
+			widthIndex = new int[] {0, 1, 1, 2};
+			heightIndex = new int[] {0, 0, -1, -1};
+			J_under = 2;
+			color = new Color(230, 20, 20);
+		} else if (type == 'z'){
+			widthIndex = new int[] {0, 1, 1, 2};
+			heightIndex = new int [] {-1, -1, 0, 0};
+			J_under = 2;
+			color = new Color(30, 240, 40);
+		} else if (type == '0'){
+			widthIndex = new int[] {1, 1, 1, 0};
+			heightIndex = new int[] {-2, -1, 0, 0};
+			J_under = 3;
+			color = new Color(30, 30, 255);
 		}
 		for(int k = 0; k < 4; k++){
-			Block blok = new Block(this.breedteindex[k], this.hoogteindex[k], this.kleur);
-			BlokLijst.add(blok);
-			grid.setBezet(this.Ilinks+blok.i, this.Jonder+blok.j, true);
+			Block block = new Block(widthIndex[k], heightIndex[k], color);
+			blockList.add(block);
+			grid.setHoldsBlock(I_left +block.i, J_under +block.j, true);
 		}
 	}
 
 	boolean checkBelow(Grid grid) {
 		boolean neergekomen = false;
-		if(this.type == '-'){
-			if (grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder+1) ||
-					grid.getBezet(this.Ilinks+2, this.Jonder+1) || grid.getBezet(this.Ilinks+3, this.Jonder+1)){
+		if(type == '-'){
+			if (grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under +1) ||
+					grid.getHoldsBlock(I_left +2, J_under +1) || grid.getHoldsBlock(I_left +3, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if(this.type == '|'){
-			if(grid.getBezet(this.Ilinks+1, this.Jonder+1)){
+		} else if(type == '|'){
+			if(grid.getHoldsBlock(I_left +1, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if(this.type == '.' || this.type == 'L' || this.type == '0'){ // twee breed
-			if (grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder+1)){
+		} else if(type == '.' || type == 'L' || type == '0'){ // two wide and flat bottom
+			if (grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if(this.type == '�' || this.type == 't' || this.type == '3'){ // drie breed
-			if(grid.getBezet(this.Ilinks, this.Jonder+1)|| grid.getBezet(this.Ilinks+1, this.Jonder+1)||
-					grid.getBezet(this.Ilinks+2, this.Jonder+1)){
+		} else if(type == '�' || type == 't' || type == '3'){ // three wide
+			if(grid.getHoldsBlock(I_left, J_under +1)|| grid.getHoldsBlock(I_left +1, J_under +1)|| grid.getHoldsBlock(I_left +2, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if(this.type == '7'){
-			if(grid.getBezet(this.Ilinks, this.Jonder-1)|| grid.getBezet(this.Ilinks+1, this.Jonder+1)){
+		} else if(type == '7'){
+			if(grid.getHoldsBlock(I_left, J_under -1)|| grid.getHoldsBlock(I_left +1, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if(this.type == '^'){
-			if(grid.getBezet(this.Ilinks, this.Jonder+1)|| grid.getBezet(this.Ilinks+1, this.Jonder)||
-					grid.getBezet(this.Ilinks+2, this.Jonder)){
+		} else if(type == '^'){
+			if(grid.getHoldsBlock(I_left, J_under +1)|| grid.getHoldsBlock(I_left +1, J_under)|| grid.getHoldsBlock(I_left +2, J_under)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if (this.type == 'T'){
-			if (grid.getBezet(this.Ilinks, this.Jonder) || grid.getBezet(this.Ilinks+1, this.Jonder+1) ||
-					grid.getBezet(this.Ilinks+2, this.Jonder)){
+		} else if (type == 'T'){
+			if (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left +1, J_under +1) || grid.getHoldsBlock(I_left +2, J_under)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if(this.type == 's'){
-			if (grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder+1) ||
-					grid.getBezet(this.Ilinks+2, this.Jonder)){
+		} else if(type == 's'){
+			if (grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under +1) || grid.getHoldsBlock(I_left +2, J_under)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if (this.type == 'S'|| this.type == '4'){
-			if (grid.getBezet(this.Ilinks, this.Jonder) || grid.getBezet(this.Ilinks+1, this.Jonder+1)){
+		} else if (type == 'S'|| type == '4'){
+			if (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left +1, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if (this.type == 'z'){
-			if (grid.getBezet(this.Ilinks, this.Jonder) || grid.getBezet(this.Ilinks+1, this.Jonder+1) ||
-					grid.getBezet(this.Ilinks+2, this.Jonder+1)){
+		} else if (type == 'z'){
+			if (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left +1, J_under +1) || grid.getHoldsBlock(I_left +2, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if (this.type == 'Z' || this.type == '5'){
-			if(grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder)){
+		} else if (type == 'Z' || type == '5'){
+			if(grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under)){
 				neergekomen = true;
 			} else {
 				move(grid,'v');
 				neergekomen = false;
 			}
-		} else if(this.type == '1'){
-			if(grid.getBezet(this.Ilinks, this.Jonder)|| grid.getBezet(this.Ilinks+1, this.Jonder)||
-					grid.getBezet(this.Ilinks+2, this.Jonder+1)){
+		} else if(type == '1'){
+			if(grid.getHoldsBlock(I_left, J_under)|| grid.getHoldsBlock(I_left +1, J_under)|| grid.getHoldsBlock(I_left +2, J_under +1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
 				neergekomen = false;
 			}
-		} else if (this.type == '2'){
-			if(grid.getBezet(this.Ilinks, this.Jonder+1)|| grid.getBezet(this.Ilinks+1, this.Jonder-1)){
+		} else if (type == '2'){
+			if(grid.getHoldsBlock(I_left, J_under +1)|| grid.getHoldsBlock(I_left +1, J_under -1)){
 				neergekomen = true;
 			} else {
 				move(grid, 'v');
@@ -163,268 +157,265 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	void checkRight(Grid grid) {
-		if (this.type == '-'){
-			if (!grid.getBezet(Ilinks+4, Jonder)){
+		if (type == '-'){
+			if (!grid.getHoldsBlock(I_left +4, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == '|'){
-			if (!grid.getBezet(Ilinks+2, Jonder-3) && !grid.getBezet(Ilinks+2, Jonder-2) &&
-					!grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
+		} else if (type == '|'){
+			if (!grid.getHoldsBlock(I_left +2, J_under -3) && !grid.getHoldsBlock(I_left +2, J_under -2) &&
+					!grid.getHoldsBlock(I_left +2, J_under -1) && !grid.getHoldsBlock(I_left +2, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == '.'){
-			if (!grid.getBezet(Ilinks+2, Jonder) && !grid.getBezet(Ilinks+2, Jonder-1)){
+		} else if (type == '.'){
+			if (!grid.getHoldsBlock(I_left +2, J_under) && !grid.getHoldsBlock(I_left +2, J_under -1)){
 				move(grid, '>');
 			}
-		} else if (this.type == 'L'){
-			if (!grid.getBezet(Ilinks+1, Jonder-2) && !grid.getBezet(Ilinks+1, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
+		} else if (type == 'L'){
+			if (!grid.getHoldsBlock(I_left +1, J_under -2) && !grid.getHoldsBlock(I_left +1, J_under -1) && !grid.getHoldsBlock(I_left +2, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == '�'||this.type == '1'){
-			if (!grid.getBezet(Ilinks+3, Jonder) && !grid.getBezet(Ilinks+3, Jonder-1)){
+		} else if (type == '�'|| type == '1'){
+			if (!grid.getHoldsBlock(I_left +3, J_under) && !grid.getHoldsBlock(I_left +3, J_under -1)){
 				move(grid, '>');
 			}
-		} else if (this.type == '7' || this.type == '0' || this.type == '4'){
-			if (!grid.getBezet(Ilinks+2, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
+		} else if (type == '7' || type == '0' || type == '4'){
+			if (!grid.getHoldsBlock(I_left +2, J_under -2) && !grid.getHoldsBlock(I_left +2, J_under -1) && !grid.getHoldsBlock(I_left +2, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == '^'){
-			if (!grid.getBezet(Ilinks+1, Jonder) && !grid.getBezet(Ilinks+3, Jonder-1)){
+		} else if (type == '^'){
+			if (!grid.getHoldsBlock(I_left +1, J_under) && !grid.getHoldsBlock(I_left +3, J_under -1)){
 				move(grid, '>');
 			}
-		} else if (this.type == 't' || this.type == 'z'){
-			if (!grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+3, Jonder)){
+		} else if (type == 't' || type == 'z'){
+			if (!grid.getHoldsBlock(I_left +2, J_under -1) && !grid.getHoldsBlock(I_left +3, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == 'T'){
-			if (!grid.getBezet(Ilinks+2, Jonder+1) && !grid.getBezet(Ilinks+3, Jonder)){
+		} else if (type == 'T'){
+			if (!grid.getHoldsBlock(I_left +2, J_under +1) && !grid.getHoldsBlock(I_left +3, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == 's'){
-			if (!grid.getBezet(Ilinks+2, Jonder) && !grid.getBezet(Ilinks+3, Jonder-1)){
+		} else if (type == 's'){
+			if (!grid.getHoldsBlock(I_left +2, J_under) && !grid.getHoldsBlock(I_left +3, J_under -1)){
 				move(grid, '>');
 			}
-		} else if (this.type == 'S'){
-			if(!grid.getBezet(Ilinks+1, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
+		} else if (type == 'S'){
+			if (!grid.getHoldsBlock(I_left +1, J_under -2) && !grid.getHoldsBlock(I_left +2, J_under -1) && !grid.getHoldsBlock(I_left +2, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == 'Z'){
-			if (!grid.getBezet(Ilinks+2, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
+		} else if (type == 'Z'){
+			if (!grid.getHoldsBlock(I_left +2, J_under -2) && !grid.getHoldsBlock(I_left +2, J_under -1) && !grid.getHoldsBlock(I_left +1, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == '2'){
-			if (!grid.getBezet(Ilinks+2, Jonder-2) && !grid.getBezet(Ilinks+1, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
+		} else if (type == '2'){
+			if (!grid.getHoldsBlock(I_left +2, J_under -2) && !grid.getHoldsBlock(I_left +1, J_under -1) && !grid.getHoldsBlock(I_left +1, J_under)){
 				move(grid, '>');
 			}
-		} else if (this.type == '3'){
-			if (!grid.getBezet(Ilinks+3, Jonder) && !grid.getBezet(Ilinks+1, Jonder-1)){
+		} else if (type == '3'){
+			if (!grid.getHoldsBlock(I_left +3, J_under) && !grid.getHoldsBlock(I_left +1, J_under -1)){
 				move(grid, '>');
 			}
-		} else if (this.type == '5'){
-			if (!grid.getBezet(Ilinks+1, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
+		} else if (type == '5'){
+			if (!grid.getHoldsBlock(I_left +1, J_under -2) && !grid.getHoldsBlock(I_left +2, J_under -1) && !grid.getHoldsBlock(I_left +1, J_under)){
 				move(grid, '>');
 			}
 		}
 	}
 
 	void checkLeft(Grid grid) {
-		if (this.type == '-'){
-			if(!grid.getBezet(Ilinks-1, Jonder)){
+		if (type == '-'){
+			if(!grid.getHoldsBlock(I_left -1, J_under)){
 				move(grid, '<');
 			}
-		} else if (this.type == '|'){
-			if (!grid.getBezet(Ilinks, Jonder-3) && !grid.getBezet(Ilinks, Jonder-2)&&
-					!grid.getBezet(Ilinks, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
+		} else if (type == '|'){
+			if (!grid.getHoldsBlock(I_left, J_under -3) && !grid.getHoldsBlock(I_left, J_under -2)&& !grid.getHoldsBlock(I_left, J_under -1) && !grid.getHoldsBlock(I_left, J_under)){
 				move(grid, '<');
 			}
-		} else if (this.type == '.'||this.type == '^'||this.type == '3'){
-			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks-1, Jonder-1)){
+		} else if (type == '.'|| type == '^'|| type == '3'){
+			if (!grid.getHoldsBlock(I_left -1, J_under) && !grid.getHoldsBlock(I_left -1, J_under -1)){
 				move(grid, '<');
 			}
-		} else if (this.type == 'L' || this.type == '2' || this.type == '5'){
-			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks-1, Jonder-1) &&
-					!grid.getBezet(Ilinks-1, Jonder-2)){
+		} else if (type == 'L' || type == '2' || type == '5'){
+			if (!grid.getHoldsBlock(I_left -1, J_under) && !grid.getHoldsBlock(I_left -1, J_under -1) && !grid.getHoldsBlock(I_left -1, J_under -2)){
 				move(grid, '<');
 			}
-		} else if (this.type == '�'){
-			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks+1, Jonder-1)){
+		} else if (type == '�'){
+			if (!grid.getHoldsBlock(I_left -1, J_under) && !grid.getHoldsBlock(I_left +1, J_under -1)){
 				move(grid, '<');
 			}
-		} else if (this.type == '7'){
-			if (!grid.getBezet(Ilinks, Jonder) && !grid.getBezet(Ilinks, Jonder-1) &&
-					!grid.getBezet(Ilinks-1, Jonder-2)){
+		} else if (type == '7'){
+			if (!grid.getHoldsBlock(I_left, J_under) && !grid.getHoldsBlock(I_left, J_under -1) && !grid.getHoldsBlock(I_left -1, J_under -2)){
 				move(grid, '<');
 			}
-		} else if (this.type == 't' || this.type == 's'){
-			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks, Jonder-1)){
+		} else if (type == 't' || type == 's'){
+			if (!grid.getHoldsBlock(I_left -1, J_under) && !grid.getHoldsBlock(I_left, J_under -1)){
 				move(grid, '<');
 			}
 		} else if (type == 'T'){
-			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks, Jonder+1)){
+			if (!grid.getHoldsBlock(I_left -1, J_under) && !grid.getHoldsBlock(I_left, J_under +1)){
 				move(grid, '<');
 			}
-		} else if (this.type == 'S'){
-			if (!grid.getBezet(Ilinks-1, Jonder-2) && !grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
+		} else if (type == 'S'){
+			if (!grid.getHoldsBlock(I_left -1, J_under -2) && !grid.getHoldsBlock(I_left -1, J_under -1) && !grid.getHoldsBlock(I_left, J_under)){
 				move(grid, '<');
 			}
-		} else if (this.type == 'z'){
-			if (!grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
+		} else if (type == 'z'){
+			if (!grid.getHoldsBlock(I_left -1, J_under -1) && !grid.getHoldsBlock(I_left, J_under)){
 				move(grid, '<');
 			}
-		} else if (this.type == 'Z'){
-			if (!grid.getBezet(Ilinks, Jonder-2) && !grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks-1, Jonder)){
+		} else if (type == 'Z'){
+			if (!grid.getHoldsBlock(I_left, J_under -2) && !grid.getHoldsBlock(I_left -1, J_under -1) && !grid.getHoldsBlock(I_left -1, J_under)){
 				move(grid, '<');
 			}
-		} else if (this.type == '0'){
-			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks, Jonder-1) && !grid.getBezet(Ilinks, Jonder-2)){
+		} else if (type == '0'){
+			if (!grid.getHoldsBlock(I_left -1, J_under) && !grid.getHoldsBlock(I_left, J_under -1) && !grid.getHoldsBlock(I_left, J_under -2)){
 				move(grid, '<');
 			}
-		} else if (this.type == '1'){
-			if (!grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
+		} else if (type == '1'){
+			if (!grid.getHoldsBlock(I_left -1, J_under -1) && !grid.getHoldsBlock(I_left +1, J_under)){
 				move(grid, '<');
 			}
-		} else if (this.type == '4'){
-			if (!grid.getBezet(Ilinks, Jonder-2) && !grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
+		} else if (type == '4'){
+			if (!grid.getHoldsBlock(I_left, J_under -2) && !grid.getHoldsBlock(I_left -1, J_under -1) && !grid.getHoldsBlock(I_left, J_under)){
 				move(grid, '<');
 			}
 		}
 	}
 
-	private void move(Grid grid, char richting){
-		for (Block blok : BlokLijst){
-			grid.setBezet(this.Ilinks+breedteindex[BlokLijst.indexOf(blok)], this.Jonder+hoogteindex[BlokLijst.indexOf(blok)], false);
+	private void move(Grid grid, char direction){
+		for (Block blok : blockList){
+			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(blok)], J_under + heightIndex[blockList.indexOf(blok)], false);
 		}
-		if(richting == '>'){
-			this.Ilinks++;
-		} else if (richting == '<') {
-			this.Ilinks--;
-		} else if (richting == 'v'){
-			this.Jonder++;
+		if(direction == '>'){
+			I_left++;
+		} else if (direction == '<') {
+			I_left--;
+		} else if (direction == 'v'){
+			J_under++;
 		}
-		for (Block blok : BlokLijst){
-			grid.setBezet(this.Ilinks+breedteindex[BlokLijst.indexOf(blok)], this.Jonder+hoogteindex[BlokLijst.indexOf(blok)], true);
+		for (Block block : blockList){
+			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], true);
 		}
 	}
 
 	void layDownBlocks(Field field){
-		for(Block blok : BlokLijst){
-			Field.LigBlokken.add(blok);
-			if(blok.j == 1){
-				field.StopGame();
+		for(Block block : blockList){
+			Field.groundBlocks.add(block);
+			if(block.j == 1){
+				field.stopGame();
 				break;
 			}
 		}
 	}
 
 	void rotate(Grid grid){
-		for (Block blok : BlokLijst){
-			grid.setBezet(this.Ilinks+breedteindex[BlokLijst.indexOf(blok)], this.Jonder+hoogteindex[BlokLijst.indexOf(blok)], false);
+		for (Block blok : blockList){
+			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(blok)], J_under + heightIndex[blockList.indexOf(blok)], false);
 		}
 		if(type == '-'){
-			if(this.Jonder > 3 && this.Jonder < Grid.HoogteAantal){
-				this.breedteindex = new int[] {1, 1, 1, 1};
-				this.hoogteindex = new int[] {0, -1, -2, -3};
-				this.type ='|';
+			if(J_under > 3 && J_under < Grid.heightNumber){
+				widthIndex = new int[] {1, 1, 1, 1};
+				heightIndex = new int[] {0, -1, -2, -3};
+				type ='|';
 			}
 		} else if(type == '|'){
-			if(!grid.getBezet(Ilinks, Jonder) && !grid.getBezet(Ilinks+2, Jonder)
-					&& !grid.getBezet(Ilinks+3, Jonder)) {
-				this.breedteindex = new int[] {0, 1, 2, 3};
-				this.hoogteindex = new int[] {0, 0, 0, 0};
-				this.type = '-';
+			if(!grid.getHoldsBlock(I_left, J_under) && !grid.getHoldsBlock(I_left +2, J_under)
+					&& !grid.getHoldsBlock(I_left +3, J_under)) {
+				widthIndex = new int[] {0, 1, 2, 3};
+				heightIndex = new int[] {0, 0, 0, 0};
+				type = '-';
 			}
 		} else if(type == 'L'){
-			if(!grid.getBezet(Ilinks+2, Jonder) && !grid.getBezet(Ilinks+2, Jonder-1)){
-				this.breedteindex = new int[] {0, 1, 2, 2};
-				this.hoogteindex = new int[] {0, 0, 0, -1};
-				this.type = '�';
+			if(!grid.getHoldsBlock(I_left +2, J_under) && !grid.getHoldsBlock(I_left +2, J_under -1)){
+				widthIndex = new int[] {0, 1, 2, 2};
+				heightIndex = new int[] {0, 0, 0, -1};
+				type = '�';
 			}
 		} else if(type == '�'){
-			this.breedteindex = new int[] {0, 1, 1, 1};
-			this.hoogteindex = new int[] {-2, -2, -1, 0};
-			this.type = '7';
+			widthIndex = new int[] {0, 1, 1, 1};
+			heightIndex = new int[] {-2, -2, -1, 0};
+			type = '7';
 		} else if(type == '7'){
-			if(!grid.getBezet(this.Ilinks+2, this.Jonder-1)){
-				this.breedteindex = new int[] {0, 0, 1, 2};
-				this.hoogteindex = new int[] {0, -1, -1, -1};
-				this.type = '^';
+			if(!grid.getHoldsBlock(I_left +2, J_under -1)){
+				widthIndex = new int[] {0, 0, 1, 2};
+				heightIndex = new int[] {0, -1, -1, -1};
+				type = '^';
 			}
 		} else if(type == '^'){
-			this.breedteindex = new int[] {0, 0, 0, 1};
-			this.hoogteindex = new int[] {-2, -1, 0, 0};
-			this.type = 'L';
+			widthIndex = new int[] {0, 0, 0, 1};
+			heightIndex = new int[] {-2, -1, 0, 0};
+			type = 'L';
 		} else if (type == 't'){
-			this.breedteindex = new int[] {1, 1, 0, 1};
-			this.hoogteindex = new int[] {-2, -1, -1, 0};
-			this.type = '4';
+			widthIndex = new int[] {1, 1, 0, 1};
+			heightIndex = new int[] {-2, -1, -1, 0};
+			type = '4';
 		}
 		else if (type == '4'){
-			if(!grid.getBezet(this.Ilinks+2,this.Jonder-1)){
-				this.breedteindex = new int[] {0, 1, 1, 2};
-				this.hoogteindex = new int[] {-1, -1, 0, -1};
-				this.type = 'T';
+			if(!grid.getHoldsBlock(I_left +2,J_under -1)){
+				widthIndex = new int[] {0, 1, 1, 2};
+				heightIndex = new int[] {-1, -1, 0, -1};
+				type = 'T';
 			}
 		} else if (type == 'T'){
-			this.breedteindex = new int[] {0, 0, 1, 0};
-			this.hoogteindex = new int[] {-2, -1, -1, 0};
-			this.type = '5';
+			widthIndex = new int[] {0, 0, 1, 0};
+			heightIndex = new int[] {-2, -1, -1, 0};
+			type = '5';
 		} else if (type == '5'){
-			if(!grid.getBezet(this.Ilinks+2,this.Jonder-1)){
-				this.breedteindex = new int[] {0, 1, 1, 2};
-				this.hoogteindex = new int[] {0, 0, -1, 0};
-				this.type = 't';
+			if(!grid.getHoldsBlock(I_left +2,J_under -1)){
+				widthIndex = new int[] {0, 1, 1, 2};
+				heightIndex = new int[] {0, 0, -1, 0};
+				type = 't';
 			}
 		} else if (type == 's'){
-			this.breedteindex = new int[] {0, 0, 1, 1};
-			this.hoogteindex = new int[] {-2, -1, -1, 0};
-			this.type = 'S';
+			widthIndex = new int[] {0, 0, 1, 1};
+			heightIndex = new int[] {-2, -1, -1, 0};
+			type = 'S';
 		} else if (type == 'S'){
-			if(!grid.getBezet(this.Ilinks+2, this.Jonder-1)){
-				this.breedteindex = new int[] {0, 1, 1, 2};
-				this.hoogteindex = new int[] {0, 0, -1, -1};
-				this.type = 's';
+			if(!grid.getHoldsBlock(I_left +2, J_under -1)){
+				widthIndex = new int[] {0, 1, 1, 2};
+				heightIndex = new int[] {0, 0, -1, -1};
+				type = 's';
 			}
 		} else if (type == 'z'){
-			this.breedteindex = new int[] {0, 0, 1, 1};
-			this.hoogteindex = new int[] {0, -1, -1, -2};
-			this.type = 'Z';
+			widthIndex = new int[] {0, 0, 1, 1};
+			heightIndex = new int[] {0, -1, -1, -2};
+			type = 'Z';
 		} else if (type == 'Z'){
-			if(!grid.getBezet(this.Ilinks+2, this.Jonder)){
-				this.breedteindex = new int[] {0, 1, 1, 2};
-				this.hoogteindex = new int [] {-1, -1, 0, 0};
-				this.type = 'z';
+			if(!grid.getHoldsBlock(I_left +2, J_under)){
+				widthIndex = new int[] {0, 1, 1, 2};
+				heightIndex = new int [] {-1, -1, 0, 0};
+				type = 'z';
 			}
-		} else if(type == '0'){ // gespiegelde L
-			if(!grid.getBezet(Ilinks+2, Jonder) && !grid.getBezet(Ilinks+2, Jonder-1)){
-				this.breedteindex = new int[] {0, 1, 2, 2};
-				this.hoogteindex = new int[] {-1, -1, -1, 0};
-				this.type = '1';
+		} else if(type == '0'){ // = mirrored L
+			if(!grid.getHoldsBlock(I_left +2, J_under) && !grid.getHoldsBlock(I_left +2, J_under -1)){
+				widthIndex = new int[] {0, 1, 2, 2};
+				heightIndex = new int[] {-1, -1, -1, 0};
+				type = '1';
 			}
 		} else if (type == '1'){
-			this.breedteindex = new int[] {1, 0, 0, 0};
-			this.hoogteindex = new int[] {-2, -2, -1, 0};
-			this.type = '2';
+			widthIndex = new int[] {1, 0, 0, 0};
+			heightIndex = new int[] {-2, -2, -1, 0};
+			type = '2';
 		} else if (type == '2'){
-			if(!grid.getBezet(this.Ilinks+1, this.Jonder) && !grid.getBezet(this.Ilinks+2, this.Jonder)){
-				this.breedteindex = new int[] {0, 0, 1, 2};
-				this.hoogteindex = new int[] {-1, 0, 0, 0};
-				this.type = '3';
+			if(!grid.getHoldsBlock(I_left +1, J_under) && !grid.getHoldsBlock(I_left +2, J_under)){
+				widthIndex = new int[] {0, 0, 1, 2};
+				heightIndex = new int[] {-1, 0, 0, 0};
+				type = '3';
 			}
 		} else if (type == '3'){
-			this.breedteindex = new int[] {1, 1, 1, 0};
-			this.hoogteindex = new int[] {-2, -1, 0, 0};
-			this.type = '0';
+			widthIndex = new int[] {1, 1, 1, 0};
+			heightIndex = new int[] {-2, -1, 0, 0};
+			type = '0';
 		}
 
-		for (Block blok : BlokLijst){
-			grid.setBezet(this.Ilinks+breedteindex[BlokLijst.indexOf(blok)], this.Jonder+hoogteindex[BlokLijst.indexOf(blok)], true);
+		for (Block block : blockList){
+			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], true);
 		}
 	}
 
 	void draw(Graphics graphics){
-		for(Block blok : BlokLijst){
-			blok.i = this.Ilinks+breedteindex[BlokLijst.indexOf(blok)];
-			blok.j = this.Jonder+hoogteindex[BlokLijst.indexOf(blok)];
+		for(Block blok : blockList){
+			blok.i = I_left + widthIndex[blockList.indexOf(blok)];
+			blok.j = J_under + heightIndex[blockList.indexOf(blok)];
 			blok.setPosition(blok.i, blok.j);
 			blok.draw(graphics);
 		}

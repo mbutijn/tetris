@@ -2,9 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
 import javax.swing.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,36 +10,34 @@ import java.util.Comparator;
 public class Field extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 
-//	private Grid grid = new Grid(30, 2, 13, 21);
-	private Grid grid = new Grid(30, 2, 5, 12);
-	private static GreyBoxes grijzehokjes;
-	private static ArrayList<BlockFormation> BlokFormaties = new ArrayList<BlockFormation>();
-	static ArrayList<Block> LigBlokken = new ArrayList<Block>();
-	static ArrayList<Integer> VerwijderIndex = new ArrayList<Integer>();
+	private Grid grid = new Grid(30, 2, 13, 21);
+//	private Grid grid = new Grid(30, 2, 5, 12);
+	private static GreyBoxes greyBoxes;
+	private static ArrayList<BlockFormation> blockFormations = new ArrayList<>();
+	static ArrayList<Block> groundBlocks = new ArrayList<>();
+	static ArrayList<Integer> removeIndex = new ArrayList<>();
 	private Timer timer;
-	static int punten;
-	private static JTextField puntenveld = new JTextField("0", 4);
+	static int points;
+	private static JTextField scoreField = new JTextField("0", 4);
 	static JTextArea highscore = new JTextArea("0", 0, 0);
 	private int count = 0;
 
 	Field(){
-		grijzehokjes = new GreyBoxes();
-		setContentPane(grijzehokjes);
+		greyBoxes = new GreyBoxes();
+		setContentPane(greyBoxes);
 		setKeyBoardListeners();
 		setResizable(false);
 		setLayout(new BorderLayout());
-		JLabel SpelerPunten = new JLabel("Punten: ");
-		JLabel HighScoreLabel = new JLabel("Datum:                   Scores:");
 
-		JPanel puntenpaneel = new JPanel();
-		JPanel highscorepaneel = new JPanel();
-		puntenveld.setEditable(false);
-		puntenveld.setVisible(true);
+		JPanel panel_points = new JPanel();
+		JPanel panel_highscore = new JPanel();
+		scoreField.setEditable(false);
+		scoreField.setVisible(true);
 		highscore.setEditable(false);
 		highscore.setVisible(true);
 
-		puntenpaneel.add(SpelerPunten);
-		puntenpaneel.add(puntenveld);
+		panel_points.add(new JLabel("Points: "));
+		panel_points.add(scoreField);
 
 		ObjectInputStream inputstream;
 
@@ -50,16 +46,16 @@ public class Field extends JFrame implements KeyListener {
 			String highscores = (String) inputstream.readObject();
 			highscore.setText(highscores);
 		} catch(Exception ex) {
-			System.out.println("laden highscores niet gelukt");
+			System.out.println("loading highscores failed");
 		}
 
-		highscorepaneel.setLayout(new BorderLayout(1,1));
-		highscorepaneel.add(HighScoreLabel,BorderLayout.NORTH);
-		highscorepaneel.add(highscore,BorderLayout.CENTER);
-		highscorepaneel.add(new Panel(),BorderLayout.EAST);
+		panel_highscore.setLayout(new BorderLayout(1,1));
+		panel_highscore.add(new JLabel("Date:                   Scores:"),BorderLayout.NORTH);
+		panel_highscore.add(highscore,BorderLayout.CENTER);
+		panel_highscore.add(new Panel(),BorderLayout.EAST);
 
-		add(puntenpaneel, BorderLayout.SOUTH);
-		add(highscorepaneel, BorderLayout.EAST);
+		add(panel_points, BorderLayout.SOUTH);
+		add(panel_highscore, BorderLayout.EAST);
 	}
 
 	void startGame() {
@@ -68,74 +64,72 @@ public class Field extends JFrame implements KeyListener {
 		timer.start();
 	}
 
-	private void setBFL(ArrayList<BlockFormation> BlokFormaties){
-		Field.BlokFormaties = BlokFormaties;
+	private void setBFL(ArrayList<BlockFormation> BlokFormations){
+		Field.blockFormations = BlokFormations;
 	}
 
-	private ArrayList<BlockFormation> getBlokFormatieLijst(){
-		return BlokFormaties;
+	private ArrayList<BlockFormation> getBlockFormationList(){
+		return blockFormations;
 	}
 
 	private ActionListener run = new ActionListener() {
-		boolean neergekomen;
 		public void actionPerformed(ActionEvent evt) {
 			count++;
-			grijzehokjes.paintImmediately(new Rectangle(0, 0, Spel.xBound, Spel.yBound));
-			if(BlokFormaties.isEmpty()){
-				BlokFormaties.add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.BreedteAantal-5)), SelectType(), grid));
-				setBFL(BlokFormaties);
+			greyBoxes.paintImmediately(new Rectangle(0, 0, Spel.xBound, Spel.yBound));
+			if(blockFormations.isEmpty()){
+				blockFormations.add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber -5)), selectType(), grid));
+				setBFL(blockFormations);
 			}
 			if (count == 10){
-				neergekomen = getBlokFormatieLijst().get(0).checkBelow(grid);
 
-				if (neergekomen){
-					MakeNewOne(getBlokFormatieLijst().get(0));
+				if (getBlockFormationList().get(0).checkBelow(grid)){
+					makeNewOne(getBlockFormationList().get(0));
 				}
 				count = 0;
 			}
 		}
 	};
 
-	private void MakeNewOne(BlockFormation blokformatie) {
-		blokformatie.layDownBlocks(this);
+	private void makeNewOne(BlockFormation blockFormation) {
+		blockFormation.layDownBlocks(this);
 		grid.makeFullRows();
-		if(!VerwijderIndex.isEmpty()){
-			RemoveEveryBlock();
+		if(!removeIndex.isEmpty()){
+			removeEveryBlock();
 		}
-		getBlokFormatieLijst().remove(0);
-		getBlokFormatieLijst().add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.BreedteAantal-5)), SelectType(), grid));
+		getBlockFormationList().remove(0);
+		getBlockFormationList().add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber -5)), selectType(), grid));
 	}
 
-	private void RemoveEveryBlock(){
-		int aantal = LigBlokken.size();
-		int gatgrootte = 0;
-		Collections.sort(VerwijderIndex);
+	private void removeEveryBlock(){
+		int number = groundBlocks.size();
+		int gapSize = 0;
+		Collections.sort(removeIndex);
 
-		for (int k = 0; k<aantal; k++){
-			if(!VerwijderIndex.isEmpty()){
-				if(k == VerwijderIndex.get(0)){
-					LigBlokken.remove(gatgrootte);
-					VerwijderIndex.remove(0);
+		for (int k = 0; k < number; k++){
+			if(!removeIndex.isEmpty()){
+				if(k == removeIndex.get(0)){
+					groundBlocks.remove(gapSize);
+					removeIndex.remove(0);
 				} else{
-					gatgrootte++;
+					gapSize++;
 				}
 			}
 		}
-		Collections.sort(LigBlokken, new CustomComparator());
-		DropGroundBlocks();
+		Collections.sort(groundBlocks, new CustomComparator());
+		dropGroundBlocks();
 	}
 
-	private void DropGroundBlocks() {
-		for (int i = 0; i<Grid.VolleRijen.size(); i++){
-			for (Block ligblok: LigBlokken){
-				if (ligblok.j<Grid.VolleRijen.get(i)){
-					ligblok.drop(grid);
+	private void dropGroundBlocks() {
+		for (int i = 0; i<Grid.fullRows.size(); i++){
+			for (Block groundBlock: groundBlocks){
+				if (groundBlock.j<Grid.fullRows.get(i)){
+					groundBlock.drop(grid);
 				}
 			}
 		}
 	}
 
-	private char SelectType() {
+	private char selectType() {
 		char type;
 		double select =  Math.random();
 		if(select < 1.0/7.0){
@@ -153,7 +147,7 @@ public class Field extends JFrame implements KeyListener {
 		} else {
 			type = '0';
 		}
-		type = '-';
+		//type = '-';
 		return type;
 	}
 
@@ -163,9 +157,9 @@ public class Field extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
-	static void GivePoint() {
-		punten++;
-		puntenveld.setText(""+punten);
+	static void givePoint() {
+		points++;
+		scoreField.setText("" + points);
 	}
 
 	@Override
@@ -173,11 +167,11 @@ public class Field extends JFrame implements KeyListener {
 		int code = event.getKeyCode();
 
 		if (code == KeyEvent.VK_DOWN) {
-			getBlokFormatieLijst().get(0).checkBelow(grid);
+			getBlockFormationList().get(0).checkBelow(grid);
 		} else if (code == KeyEvent.VK_RIGHT) {
-			getBlokFormatieLijst().get(0).checkRight(grid);
+			getBlockFormationList().get(0).checkRight(grid);
 		} else if (code == KeyEvent.VK_LEFT){
-			getBlokFormatieLijst().get(0).checkLeft(grid);
+			getBlockFormationList().get(0).checkLeft(grid);
 		} else if (code == KeyEvent.VK_ESCAPE){
 			if (timer.isRunning()) {
 				timer.stop();
@@ -185,7 +179,7 @@ public class Field extends JFrame implements KeyListener {
 				timer.start();
 			}
 		} else if (code == KeyEvent.VK_SPACE){
-			getBlokFormatieLijst().get(0).rotate(grid);
+			getBlockFormationList().get(0).rotate(grid);
 		} else if (code == KeyEvent.VK_F){
 			try {
 				timer.setDelay(timer.getDelay() - 10);
@@ -203,9 +197,9 @@ public class Field extends JFrame implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {}
 
-	void StopGame() {
+	void stopGame() {
 		timer.stop();
-		JOptionPane.showMessageDialog(null, "Game over! \n" + "U heeft " + punten + " punten gescoord!");
+		JOptionPane.showMessageDialog(null, "Game over! \n" + "You scored " + points + " points!");
 		Spel.saveScore();
 	}
 
@@ -216,38 +210,38 @@ public class Field extends JFrame implements KeyListener {
 		protected void paintComponent(Graphics g){
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-			for(int i = 1; i< Grid.BreedteAantal+1; i++){
-				grid.setBezet(i, Grid.HoogteAantal+1, true);
-				for(int j = 1; j< Grid.HoogteAantal+1; j++){
-					grid.setBezet(Grid.BreedteAantal+1, j, true);
-					grid.setBezet(Grid.BreedteAantal+2, j, true);
-					grid.setBezet(0, j, true);
-
-					if(grid.getBezet(i, j)){
-						g2d.setColor(grid.bezetkleur);
+			for(int i = 1; i< Grid.widthNumber +1; i++){
+				grid.setHoldsBlock(i, Grid.heightNumber +1, true);
+				for(int j = 1; j< Grid.heightNumber +1; j++){
+					grid.setHoldsBlock(Grid.widthNumber +1, j, true);
+					grid.setHoldsBlock(Grid.widthNumber +2, j, true);
+					grid.setHoldsBlock(0, j, true);
+					/*
+					if(grid.getHoldsBlock(i, j)){
+						g2d.setColor(grid.color_occupied);
 					}else {
-						g2d.setColor(grid.vrijkleur);
+						g2d.setColor(grid.color_free);
 					}
-
-					//g2d.setColor(grid.kleur);
+					*/
+					g2d.setColor(grid.color);
 					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension()-2*Grid.getDistance(), Grid.getDimension()-2*Grid.getDistance());
 				}
 			}
 
-			for (BlockFormation blokformatie: getBlokFormatieLijst()){
-				blokformatie.draw(g2d);
+			for (BlockFormation blockFormation: getBlockFormationList()){
+				blockFormation.draw(g2d);
 			}
 
-			for (Block ligblok : LigBlokken){
-				ligblok.draw(g2d);
+			for (Block groundBlock : groundBlocks){
+				groundBlock.draw(g2d);
 			}
 		}
 	}
 
 	public class CustomComparator implements Comparator<Block> {
 		@Override
-		public int compare(Block blok1, Block blok2) {
-			return blok2.getj().compareTo(blok1.getj());
+		public int compare(Block block1, Block block2) {
+			return block2.getj().compareTo(block1.getj());
 		}
 	}
 }

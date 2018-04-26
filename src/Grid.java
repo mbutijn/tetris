@@ -3,67 +3,67 @@ import java.util.ArrayList;
 
 public class Grid {
 
-	Color kleur = new Color(180, 180, 180);
-	Color bezetkleur = new Color(200, 50, 50);
-	Color vrijkleur = new Color(50, 200, 50);
-	private static int dimensie, afstand;
-	static int BreedteAantal, HoogteAantal;
-	static ArrayList<Integer> VolleRijen = new ArrayList<Integer>();
-	private boolean [][] bezetmatrix;
+	Color color = new Color(180, 180, 180);
+	Color color_occupied = new Color(200, 50, 50);
+	Color color_free = new Color(50, 200, 50);
+	private static int dimension, distance;
+	static int widthNumber, heightNumber;
+	static ArrayList<Integer> fullRows = new ArrayList<Integer>();
+	private boolean [][] blockMatrix;
 
-	Grid(int dimensie, int afstand, int breedteaantal, int hoogteaantal){
-		Grid.HoogteAantal = hoogteaantal;
-		Grid.dimensie = dimensie;
-		Grid.afstand = afstand;
-		Grid.BreedteAantal = breedteaantal;
-		bezetmatrix = new boolean[hoogteaantal+2][breedteaantal+3];
+	Grid(int dimension, int distance, int widthNumber, int heightNumber){
+		Grid.heightNumber = heightNumber;
+		Grid.dimension = dimension;
+		Grid.distance = distance;
+		Grid.widthNumber = widthNumber;
+		blockMatrix = new boolean[heightNumber+2][widthNumber+3];
 	}
 
 	static int getDistance() {
-		return afstand;
+		return distance;
 	}
 
 	static int getDimension() {
-		return dimensie;
+		return dimension;
 	}
 
-	void setBezet(int i, int j, boolean bezet){
-		bezetmatrix[j][i] = bezet;
+	void setHoldsBlock(int i, int j, boolean occupied){
+		blockMatrix[j][i] = occupied;
 	}
 
-	public void veranderBezet(int i, int j){
-		bezetmatrix[j][i] ^= true;
+	public void changeHoldsBlock(int i, int j){
+		blockMatrix[j][i] ^= true;
 	}
 
-	boolean getBezet(int i, int j){
-		return bezetmatrix[j][i];
+	boolean getHoldsBlock(int i, int j){
+		return blockMatrix[j][i];
 	}
 
 	void makeFullRows() {
-		VolleRijen.clear();
-		for(int j=0; j < HoogteAantal+1; j++){
+		fullRows.clear();
+		for(int j = 0; j < heightNumber +1; j++){
 			if(checkLineFull(j)){
-				VolleRijen.add(j);
+				fullRows.add(j);
 			}
 		}
-		removeLines(VolleRijen);
+		removeLines(fullRows);
 	}
 
-	private void removeLines(ArrayList<Integer> VolleRijen) {
-		Field.VerwijderIndex.clear();
-		for(int rijnummer: VolleRijen){
-			for(Block ligblok: Field.LigBlokken){
-				if(ligblok.j == rijnummer){
-					this.setBezet(ligblok.i, ligblok.j, false);
-					Field.VerwijderIndex.add(Field.LigBlokken.indexOf(ligblok));
-					Field.GivePoint();
+	private void removeLines(ArrayList<Integer> fullRows) {
+		Field.removeIndex.clear();
+		for(int rowNumber : fullRows){
+			for(Block groundBlock : Field.groundBlocks){
+				if(groundBlock.j == rowNumber){
+					this.setHoldsBlock(groundBlock.i, groundBlock.j, false);
+					Field.removeIndex.add(Field.groundBlocks.indexOf(groundBlock));
+					Field.givePoint();
 				}
 			}
 		}
 	}
 
 	private boolean checkLineFull(int j){
-		for (boolean b: bezetmatrix[j])
+		for (boolean b: blockMatrix[j])
 			if (!b) return false;
 		return true;
 	}

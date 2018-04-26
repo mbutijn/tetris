@@ -19,26 +19,26 @@ public class Spel {
 
 	private static String getDate(){
 		Calendar calendar = new GregorianCalendar();
-		String jaar = String.format("%04d",calendar.get(Calendar.YEAR));
-		String maand = String.format("%02d",calendar.get(Calendar.MONTH)+1);
-		String dag = String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
-		String uur = String.format("%02d",calendar.get(Calendar.HOUR_OF_DAY));
-		String minuut = String.format("%02d",calendar.get(Calendar.MINUTE));
-		return uur + ":" + minuut + "  " + dag + "-" + maand + "-" + jaar;
+		String year = String.format("%04d",calendar.get(Calendar.YEAR));
+		String month = String.format("%02d",calendar.get(Calendar.MONTH)+1);
+		String day = String.format("%02d",calendar.get(Calendar.DAY_OF_MONTH));
+		String hour = String.format("%02d",calendar.get(Calendar.HOUR_OF_DAY));
+		String minute = String.format("%02d",calendar.get(Calendar.MINUTE));
+		return hour + ":" + minute + "  " + day + "-" + month + "-" + year;
 	}
 
 	static void saveScore() {
-		String laatstescore = getDate() + ":  " + String.format("%04d", Field.punten);
+		String lastScore = getDate() + ":  " + String.format("%04d", Field.points);
 		ObjectInputStream inputstream;
 
 		try {
 			inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
 			String oudehighscore = (String) inputstream.readObject();
-			String highscore = laatstescore + "\n" + oudehighscore;
+			String highscore = lastScore + "\n" + oudehighscore;
 			Field.highscore.setText(highscore);
 		} catch(Exception ex) {
 			ex.printStackTrace();
-			Field.highscore.setText(laatstescore);
+			Field.highscore.setText(lastScore);
 		}
 		try {
 			ObjectOutputStream outputstream = new ObjectOutputStream(new FileOutputStream("Game.ser"));
