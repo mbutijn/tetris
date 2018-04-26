@@ -1,5 +1,3 @@
-package tetris;
-
 import java.io.*;
 import java.util.*;
 

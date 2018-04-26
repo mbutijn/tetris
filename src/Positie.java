@@ -1,5 +1,3 @@
-package tetris;
-
 class Positie {
 	private int x, y;
 	
