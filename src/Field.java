@@ -9,108 +9,108 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class Veld extends JFrame implements KeyListener {
+public class Field extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
-	
-	private Grid grid = new Grid(30, 2, 13, 21);
+
+//	private Grid grid = new Grid(30, 2, 13, 21);
+	private Grid grid = new Grid(30, 2, 5, 12);
 	private static GrijzeHokjes grijzehokjes;
-	private static ArrayList<BlokFormatie> BlokFormaties = new ArrayList<BlokFormatie>();
-	static ArrayList<Blok> LigBlokken = new ArrayList<Blok>();
+	private static ArrayList<BlockFormation> BlokFormaties = new ArrayList<BlockFormation>();
+	static ArrayList<Block> LigBlokken = new ArrayList<Block>();
 	static ArrayList<Integer> VerwijderIndex = new ArrayList<Integer>();
 	private Timer timer;
 	static int punten;
 	private static JTextField puntenveld = new JTextField("0", 4);
 	static JTextArea highscore = new JTextArea("0", 0, 0);
 	private int count = 0;
-	
-	Veld(){
+
+	Field(){
 		grijzehokjes = new GrijzeHokjes();
 		setContentPane(grijzehokjes);
-        setKeyBoardListeners();
+		setKeyBoardListeners();
 		setResizable(false);
 		setLayout(new BorderLayout());
 		JLabel SpelerPunten = new JLabel("Punten: ");
 		JLabel HighScoreLabel = new JLabel("Datum:                   Scores:");
-		
+
 		JPanel puntenpaneel = new JPanel();
 		JPanel highscorepaneel = new JPanel();
 		puntenveld.setEditable(false);
 		puntenveld.setVisible(true);
 		highscore.setEditable(false);
 		highscore.setVisible(true);
-		
+
 		puntenpaneel.add(SpelerPunten);
 		puntenpaneel.add(puntenveld);
 
-        ObjectInputStream inputstream;
+		ObjectInputStream inputstream;
 
 		try {
 			inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
 			String highscores = (String) inputstream.readObject();
 			highscore.setText(highscores);
 		} catch(Exception ex) {
-            System.out.println("laden highscores niet gelukt");
-        }
-		
+			System.out.println("laden highscores niet gelukt");
+		}
+
 		highscorepaneel.setLayout(new BorderLayout(1,1));
 		highscorepaneel.add(HighScoreLabel,BorderLayout.NORTH);
 		highscorepaneel.add(highscore,BorderLayout.CENTER);
 		highscorepaneel.add(new Panel(),BorderLayout.EAST);
-		
+
 		add(puntenpaneel, BorderLayout.SOUTH);
-        add(highscorepaneel, BorderLayout.EAST);
+		add(highscorepaneel, BorderLayout.EAST);
 	}
-	
-    void startSpel() {
-    	timer = new Timer(50, run);
-        timer.setRepeats(true);
-        timer.start();
-    }
-    
-    private void setBFL(ArrayList<BlokFormatie> BlokFormaties){
-    	Veld.BlokFormaties = BlokFormaties; 
-    }
-    
-    private ArrayList<BlokFormatie> getBlokFormatieLijst(){
-    	return BlokFormaties;
-    }
+
+	void startGame() {
+		timer = new Timer(50, run);
+		timer.setRepeats(true);
+		timer.start();
+	}
+
+	private void setBFL(ArrayList<BlockFormation> BlokFormaties){
+		Field.BlokFormaties = BlokFormaties;
+	}
+
+	private ArrayList<BlockFormation> getBlokFormatieLijst(){
+		return BlokFormaties;
+	}
 
 	private ActionListener run = new ActionListener() {
-		boolean neergekomen;	
+		boolean neergekomen;
 		public void actionPerformed(ActionEvent evt) {
 			count++;
-			grijzehokjes.paintImmediately(new Rectangle(0, 0, Spel.xBound, Spel.yBound)); 
+			grijzehokjes.paintImmediately(new Rectangle(0, 0, Spel.xBound, Spel.yBound));
 			if(BlokFormaties.isEmpty()){
-				BlokFormaties.add(new BlokFormatie((int) Math.round(1+Math.random()*(Grid.BreedteAantal-5)), SelecteerType(), grid));
+				BlokFormaties.add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.BreedteAantal-5)), SelectType(), grid));
 				setBFL(BlokFormaties);
 			}
 			if (count == 10){
 				neergekomen = getBlokFormatieLijst().get(0).KijkOnder(grid);
-				
+
 				if (neergekomen){
-					MaakNieuwe(getBlokFormatieLijst().get(0));
+					MakeNewOne(getBlokFormatieLijst().get(0));
 				}
 				count = 0;
 			}
-        }
-    };
+		}
+	};
 
-    private void MaakNieuwe(BlokFormatie blokformatie) {
-    	blokformatie.zetBlokkenOver(this);
-		grid.MaakVolleRijen();		
+	private void MakeNewOne(BlockFormation blokformatie) {
+		blokformatie.zetBlokkenOver(this);
+		grid.MaakVolleRijen();
 		if(!VerwijderIndex.isEmpty()){
-			VerwijderElkBlok();
+			RemoveEveryBlock();
 		}
 		getBlokFormatieLijst().remove(0);
-		char type = SelecteerType();
-		getBlokFormatieLijst().add(new BlokFormatie((int) Math.round(1+Math.random()*(Grid.BreedteAantal-5)), type, grid));
+		getBlokFormatieLijst().add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.BreedteAantal-5)), SelectType(), grid));
 	}
 
-	private void VerwijderElkBlok(){
+	private void RemoveEveryBlock(){
 		int aantal = LigBlokken.size();
 		int gatgrootte = 0;
 		Collections.sort(VerwijderIndex);
-		
+
 		for (int k = 0; k<aantal; k++){
 			if(!VerwijderIndex.isEmpty()){
 				if(k == VerwijderIndex.get(0)){
@@ -122,12 +122,12 @@ public class Veld extends JFrame implements KeyListener {
 			}
 		}
 		Collections.sort(LigBlokken, new CustomComparator());
-		LaatLigBlokkenVallen();
+		DropGroundBlocks();
 	}
-	
-	private void LaatLigBlokkenVallen() {
+
+	private void DropGroundBlocks() {
 		for (int i = 0; i<Grid.VolleRijen.size(); i++){
-			for (Blok ligblok: LigBlokken){
+			for (Block ligblok: LigBlokken){
 				if (ligblok.j<Grid.VolleRijen.get(i)){
 					ligblok.val(grid);
 				}
@@ -135,7 +135,7 @@ public class Veld extends JFrame implements KeyListener {
 		}
 	}
 
-	private char SelecteerType() {
+	private char SelectType() {
 		char type;
 		double select =  Math.random();
 		if(select < 1.0/7.0){
@@ -153,45 +153,45 @@ public class Veld extends JFrame implements KeyListener {
 		} else {
 			type = '0';
 		}
-		//type = '0';
+		type = '-';
 		return type;
 	}
-	
-	private void setKeyBoardListeners() {
-        setFocusable(true);
-        requestFocusInWindow();
-        addKeyListener(this);
-    }
 
-	static void GeefPunt() {
+	private void setKeyBoardListeners() {
+		setFocusable(true);
+		requestFocusInWindow();
+		addKeyListener(this);
+	}
+
+	static void GivePoint() {
 		punten++;
 		puntenveld.setText(""+punten);
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent event) {
 		int code = event.getKeyCode();
-		
+
 		if (code == KeyEvent.VK_DOWN) {
 			getBlokFormatieLijst().get(0).KijkOnder(grid);
-        } else if (code == KeyEvent.VK_RIGHT) {
-        	getBlokFormatieLijst().get(0).KijkRechts(grid);
-        } else if (code == KeyEvent.VK_LEFT){
-        	getBlokFormatieLijst().get(0).KijkLinks(grid);
-        } else if (code == KeyEvent.VK_ESCAPE){
+		} else if (code == KeyEvent.VK_RIGHT) {
+			getBlokFormatieLijst().get(0).KijkRechts(grid);
+		} else if (code == KeyEvent.VK_LEFT){
+			getBlokFormatieLijst().get(0).KijkLinks(grid);
+		} else if (code == KeyEvent.VK_ESCAPE){
 			if (timer.isRunning()) {
 				timer.stop();
 			} else {
 				timer.start();
 			}
-        } else if (code == KeyEvent.VK_SPACE){
-        	getBlokFormatieLijst().get(0).roteer(grid);
-        } else if (code == KeyEvent.VK_F){
+		} else if (code == KeyEvent.VK_SPACE){
+			getBlokFormatieLijst().get(0).roteer(grid);
+		} else if (code == KeyEvent.VK_F){
 			try {
 				timer.setDelay(timer.getDelay() - 10);
 			} catch(Exception exception) {
-                System.out.println("Maximum speed");
-            }
+				System.out.println("Maximum speed");
+			}
 		} else if (code == KeyEvent.VK_S){
 			timer.setDelay(timer.getDelay() + 10);
 		}
@@ -202,13 +202,13 @@ public class Veld extends JFrame implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {}
-	
+
 	void StopSpel() {
 		timer.stop();
 		JOptionPane.showMessageDialog(null, "Game over! \n" + "U heeft " + punten + " punten gescoord!");
-		Spel.bewaarScore();
+		Spel.saveScore();
 	}
-	
+
 	class GrijzeHokjes extends JPanel {
 		private static final long serialVersionUID = 1L;
 
@@ -222,32 +222,32 @@ public class Veld extends JFrame implements KeyListener {
 					grid.setBezet(Grid.BreedteAantal+1, j, true);
 					grid.setBezet(Grid.BreedteAantal+2, j, true);
 					grid.setBezet(0, j, true);
-					/*
+
 					if(grid.getBezet(i, j)){
 						g2d.setColor(grid.bezetkleur);
 					}else {
 						g2d.setColor(grid.vrijkleur);
 					}
-					*/
-					g2d.setColor(grid.kleur);
+
+					//g2d.setColor(grid.kleur);
 					g2d.fillRect(i*Grid.getDimensie(), j*Grid.getDimensie(), Grid.getDimensie()-2*Grid.getAfstand(), Grid.getDimensie()-2*Grid.getAfstand());
 				}
 			}
-		
-			for (BlokFormatie blokformatie: getBlokFormatieLijst()){
+
+			for (BlockFormation blokformatie: getBlokFormatieLijst()){
 				blokformatie.teken(g2d);
 			}
-			
-			for (Blok ligblok : LigBlokken){
+
+			for (Block ligblok : LigBlokken){
 				ligblok.teken(g2d);
-			}			
+			}
 		}
 	}
-	
-	public class CustomComparator implements Comparator<Blok> {
-	    @Override
-	    public int compare(Blok blok1, Blok blok2) {
-	        return blok2.getj().compareTo(blok1.getj());
-	    }
+
+	public class CustomComparator implements Comparator<Block> {
+		@Override
+		public int compare(Block blok1, Block blok2) {
+			return blok2.getj().compareTo(blok1.getj());
+		}
 	}
 }

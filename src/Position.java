@@ -1,6 +1,6 @@
-class Positie {
+class Position {
 	private int x, y;
-	
+
 	void setX(int x){
 		this.x = x;
 	}
@@ -13,7 +13,7 @@ class Positie {
 		this.y = y;
 	}
 
-	 int getY(){
+	int getY(){
 		return y;
 	}
 

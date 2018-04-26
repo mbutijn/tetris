@@ -6,18 +6,18 @@ import javax.swing.JFrame;
 public class Spel {
 	static int xBound = 600;
 	static int yBound = 750;
-	
-	public static void main(String[] args){
-		Veld veld = new Veld();
-		veld.setVisible(true);
-		veld.setSize(xBound, yBound);
-		veld.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		veld.setTitle("Tetris");
 
-		veld.startSpel();
+	public static void main(String[] args){
+		Field field = new Field();
+		field.setVisible(true);
+		field.setSize(xBound, yBound);
+		field.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		field.setTitle("Tetris");
+
+		field.startGame();
 	}
-	
-	private static String getDatum(){
+
+	private static String getDate(){
 		Calendar calendar = new GregorianCalendar();
 		String jaar = String.format("%04d",calendar.get(Calendar.YEAR));
 		String maand = String.format("%02d",calendar.get(Calendar.MONTH)+1);
@@ -27,22 +27,22 @@ public class Spel {
 		return uur + ":" + minuut + "  " + dag + "-" + maand + "-" + jaar;
 	}
 
-	static void bewaarScore() {
-		String laatstescore = getDatum() + ":  " + String.format("%04d",Veld.punten);
-        ObjectInputStream inputstream;
+	static void saveScore() {
+		String laatstescore = getDate() + ":  " + String.format("%04d", Field.punten);
+		ObjectInputStream inputstream;
 
 		try {
 			inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
 			String oudehighscore = (String) inputstream.readObject();
 			String highscore = laatstescore + "\n" + oudehighscore;
-			Veld.highscore.setText(highscore);
+			Field.highscore.setText(highscore);
 		} catch(Exception ex) {
 			ex.printStackTrace();
-			Veld.highscore.setText(laatstescore);
+			Field.highscore.setText(laatstescore);
 		}
 		try {
 			ObjectOutputStream outputstream = new ObjectOutputStream(new FileOutputStream("Game.ser"));
-			outputstream.writeObject(Veld.highscore.getText());
+			outputstream.writeObject(Field.highscore.getText());
 			outputstream.close();
 		} catch(IOException ex) {
 			ex.printStackTrace();
