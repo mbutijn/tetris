@@ -19,11 +19,11 @@ public class Grid {
 		bezetmatrix = new boolean[hoogteaantal+2][breedteaantal+3];
 	}
 
-	static int getAfstand() {
+	static int getDistance() {
 		return afstand;
 	}
 
-	static int getDimensie() {
+	static int getDimension() {
 		return dimensie;
 	}
 
@@ -39,17 +39,17 @@ public class Grid {
 		return bezetmatrix[j][i];
 	}
 
-	void MaakVolleRijen() {
+	void makeFullRows() {
 		VolleRijen.clear();
 		for(int j=0; j < HoogteAantal+1; j++){
-			if(ControleerLijnVol(j)){
+			if(checkLineFull(j)){
 				VolleRijen.add(j);
 			}
 		}
-		VerwijderLijnen(VolleRijen);
+		removeLines(VolleRijen);
 	}
 
-	private void VerwijderLijnen(ArrayList<Integer> VolleRijen) {
+	private void removeLines(ArrayList<Integer> VolleRijen) {
 		Field.VerwijderIndex.clear();
 		for(int rijnummer: VolleRijen){
 			for(Block ligblok: Field.LigBlokken){
@@ -62,7 +62,7 @@ public class Grid {
 		}
 	}
 
-	private boolean ControleerLijnVol(int j){
+	private boolean checkLineFull(int j){
 		for (boolean b: bezetmatrix[j])
 			if (!b) return false;
 		return true;

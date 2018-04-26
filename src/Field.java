@@ -14,7 +14,7 @@ public class Field extends JFrame implements KeyListener {
 
 //	private Grid grid = new Grid(30, 2, 13, 21);
 	private Grid grid = new Grid(30, 2, 5, 12);
-	private static GrijzeHokjes grijzehokjes;
+	private static GreyBoxes grijzehokjes;
 	private static ArrayList<BlockFormation> BlokFormaties = new ArrayList<BlockFormation>();
 	static ArrayList<Block> LigBlokken = new ArrayList<Block>();
 	static ArrayList<Integer> VerwijderIndex = new ArrayList<Integer>();
@@ -25,7 +25,7 @@ public class Field extends JFrame implements KeyListener {
 	private int count = 0;
 
 	Field(){
-		grijzehokjes = new GrijzeHokjes();
+		grijzehokjes = new GreyBoxes();
 		setContentPane(grijzehokjes);
 		setKeyBoardListeners();
 		setResizable(false);
@@ -86,7 +86,7 @@ public class Field extends JFrame implements KeyListener {
 				setBFL(BlokFormaties);
 			}
 			if (count == 10){
-				neergekomen = getBlokFormatieLijst().get(0).KijkOnder(grid);
+				neergekomen = getBlokFormatieLijst().get(0).checkBelow(grid);
 
 				if (neergekomen){
 					MakeNewOne(getBlokFormatieLijst().get(0));
@@ -97,8 +97,8 @@ public class Field extends JFrame implements KeyListener {
 	};
 
 	private void MakeNewOne(BlockFormation blokformatie) {
-		blokformatie.zetBlokkenOver(this);
-		grid.MaakVolleRijen();
+		blokformatie.layDownBlocks(this);
+		grid.makeFullRows();
 		if(!VerwijderIndex.isEmpty()){
 			RemoveEveryBlock();
 		}
@@ -129,7 +129,7 @@ public class Field extends JFrame implements KeyListener {
 		for (int i = 0; i<Grid.VolleRijen.size(); i++){
 			for (Block ligblok: LigBlokken){
 				if (ligblok.j<Grid.VolleRijen.get(i)){
-					ligblok.val(grid);
+					ligblok.drop(grid);
 				}
 			}
 		}
@@ -173,11 +173,11 @@ public class Field extends JFrame implements KeyListener {
 		int code = event.getKeyCode();
 
 		if (code == KeyEvent.VK_DOWN) {
-			getBlokFormatieLijst().get(0).KijkOnder(grid);
+			getBlokFormatieLijst().get(0).checkBelow(grid);
 		} else if (code == KeyEvent.VK_RIGHT) {
-			getBlokFormatieLijst().get(0).KijkRechts(grid);
+			getBlokFormatieLijst().get(0).checkRight(grid);
 		} else if (code == KeyEvent.VK_LEFT){
-			getBlokFormatieLijst().get(0).KijkLinks(grid);
+			getBlokFormatieLijst().get(0).checkLeft(grid);
 		} else if (code == KeyEvent.VK_ESCAPE){
 			if (timer.isRunning()) {
 				timer.stop();
@@ -185,7 +185,7 @@ public class Field extends JFrame implements KeyListener {
 				timer.start();
 			}
 		} else if (code == KeyEvent.VK_SPACE){
-			getBlokFormatieLijst().get(0).roteer(grid);
+			getBlokFormatieLijst().get(0).rotate(grid);
 		} else if (code == KeyEvent.VK_F){
 			try {
 				timer.setDelay(timer.getDelay() - 10);
@@ -203,13 +203,13 @@ public class Field extends JFrame implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {}
 
-	void StopSpel() {
+	void StopGame() {
 		timer.stop();
 		JOptionPane.showMessageDialog(null, "Game over! \n" + "U heeft " + punten + " punten gescoord!");
 		Spel.saveScore();
 	}
 
-	class GrijzeHokjes extends JPanel {
+	class GreyBoxes extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -230,16 +230,16 @@ public class Field extends JFrame implements KeyListener {
 					}
 
 					//g2d.setColor(grid.kleur);
-					g2d.fillRect(i*Grid.getDimensie(), j*Grid.getDimensie(), Grid.getDimensie()-2*Grid.getAfstand(), Grid.getDimensie()-2*Grid.getAfstand());
+					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension()-2*Grid.getDistance(), Grid.getDimension()-2*Grid.getDistance());
 				}
 			}
 
 			for (BlockFormation blokformatie: getBlokFormatieLijst()){
-				blokformatie.teken(g2d);
+				blokformatie.draw(g2d);
 			}
 
 			for (Block ligblok : LigBlokken){
-				ligblok.teken(g2d);
+				ligblok.draw(g2d);
 			}
 		}
 	}

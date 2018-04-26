@@ -13,12 +13,12 @@ public class Block {
 		this.kleur = kleur;
 	}
 
-	void setPositie(int i, int j) {
-		this.position.setX(this.i*Grid.getDimensie()+Grid.getAfstand());
-		this.position.setY(this.j*Grid.getDimensie()+Grid.getAfstand());
+	void setPosition(int i, int j) {
+		this.position.setX(this.i*Grid.getDimension()+Grid.getDistance());
+		this.position.setY(this.j*Grid.getDimension()+Grid.getDistance());
 	}
 
-	void val(Grid grid){
+	void drop(Grid grid){
 		grid.setBezet(this.i, this.j, false);
 		this.j++;
 		grid.setBezet(this.i, this.j, true);
@@ -32,15 +32,15 @@ public class Block {
 		return this.i;
 	}
 
-	void teken(Graphics graphics){
+	void draw(Graphics graphics){
 		float [] shine = {0.4f, 1.0f};
 		Color[] colors = {kleur, Color.BLACK};
 		Graphics2D g2d = (Graphics2D) graphics;
-		setPositie(this.i, this.j);
+		setPosition(this.i, this.j);
 
 		Point2D center = new Point2D.Float(this.position.getX(), this.position.getY());
-		RadialGradientPaint rgp = new RadialGradientPaint(center, (float) (1.2*Grid.getDimensie()), shine, colors);
+		RadialGradientPaint rgp = new RadialGradientPaint(center, (float) (1.2*Grid.getDimension()), shine, colors);
 		g2d.setPaint(rgp);
-		g2d.fillRect(this.position.getX(), this.position.getY(), Grid.getDimensie()-4*Grid.getAfstand(), Grid.getDimensie()-4*Grid.getAfstand());
+		g2d.fillRect(this.position.getX(), this.position.getY(), Grid.getDimension()-4*Grid.getDistance(), Grid.getDimension()-4*Grid.getDistance());
 	}
 }

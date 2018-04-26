@@ -58,28 +58,28 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	boolean KijkOnder(Grid grid) {
+	boolean checkBelow(Grid grid) {
 		boolean neergekomen = false;
 		if(this.type == '-'){
 			if (grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder+1) ||
 					grid.getBezet(this.Ilinks+2, this.Jonder+1) || grid.getBezet(this.Ilinks+3, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if(this.type == '|'){
 			if(grid.getBezet(this.Ilinks+1, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if(this.type == '.' || this.type == 'L' || this.type == '0'){ // twee breed
 			if (grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if(this.type == '�' || this.type == 't' || this.type == '3'){ // drie breed
@@ -87,14 +87,14 @@ class BlockFormation extends ArrayList<Block> {
 					grid.getBezet(this.Ilinks+2, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if(this.type == '7'){
 			if(grid.getBezet(this.Ilinks, this.Jonder-1)|| grid.getBezet(this.Ilinks+1, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if(this.type == '^'){
@@ -102,7 +102,7 @@ class BlockFormation extends ArrayList<Block> {
 					grid.getBezet(this.Ilinks+2, this.Jonder)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if (this.type == 'T'){
@@ -110,7 +110,7 @@ class BlockFormation extends ArrayList<Block> {
 					grid.getBezet(this.Ilinks+2, this.Jonder)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if(this.type == 's'){
@@ -118,14 +118,14 @@ class BlockFormation extends ArrayList<Block> {
 					grid.getBezet(this.Ilinks+2, this.Jonder)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if (this.type == 'S'|| this.type == '4'){
 			if (grid.getBezet(this.Ilinks, this.Jonder) || grid.getBezet(this.Ilinks+1, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if (this.type == 'z'){
@@ -133,14 +133,14 @@ class BlockFormation extends ArrayList<Block> {
 					grid.getBezet(this.Ilinks+2, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if (this.type == 'Z' || this.type == '5'){
 			if(grid.getBezet(this.Ilinks, this.Jonder+1) || grid.getBezet(this.Ilinks+1, this.Jonder)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid,'v');
+				move(grid,'v');
 				neergekomen = false;
 			}
 		} else if(this.type == '1'){
@@ -148,149 +148,149 @@ class BlockFormation extends ArrayList<Block> {
 					grid.getBezet(this.Ilinks+2, this.Jonder+1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		} else if (this.type == '2'){
 			if(grid.getBezet(this.Ilinks, this.Jonder+1)|| grid.getBezet(this.Ilinks+1, this.Jonder-1)){
 				neergekomen = true;
 			} else {
-				Verplaats(grid, 'v');
+				move(grid, 'v');
 				neergekomen = false;
 			}
 		}
 		return neergekomen;
 	}
 
-	void KijkRechts(Grid grid) {
+	void checkRight(Grid grid) {
 		if (this.type == '-'){
 			if (!grid.getBezet(Ilinks+4, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '|'){
 			if (!grid.getBezet(Ilinks+2, Jonder-3) && !grid.getBezet(Ilinks+2, Jonder-2) &&
 					!grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '.'){
 			if (!grid.getBezet(Ilinks+2, Jonder) && !grid.getBezet(Ilinks+2, Jonder-1)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == 'L'){
 			if (!grid.getBezet(Ilinks+1, Jonder-2) && !grid.getBezet(Ilinks+1, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '�'||this.type == '1'){
 			if (!grid.getBezet(Ilinks+3, Jonder) && !grid.getBezet(Ilinks+3, Jonder-1)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '7' || this.type == '0' || this.type == '4'){
 			if (!grid.getBezet(Ilinks+2, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '^'){
 			if (!grid.getBezet(Ilinks+1, Jonder) && !grid.getBezet(Ilinks+3, Jonder-1)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == 't' || this.type == 'z'){
 			if (!grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+3, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == 'T'){
 			if (!grid.getBezet(Ilinks+2, Jonder+1) && !grid.getBezet(Ilinks+3, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == 's'){
 			if (!grid.getBezet(Ilinks+2, Jonder) && !grid.getBezet(Ilinks+3, Jonder-1)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == 'S'){
 			if(!grid.getBezet(Ilinks+1, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+2, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == 'Z'){
 			if (!grid.getBezet(Ilinks+2, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '2'){
 			if (!grid.getBezet(Ilinks+2, Jonder-2) && !grid.getBezet(Ilinks+1, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '3'){
 			if (!grid.getBezet(Ilinks+3, Jonder) && !grid.getBezet(Ilinks+1, Jonder-1)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		} else if (this.type == '5'){
 			if (!grid.getBezet(Ilinks+1, Jonder-2) && !grid.getBezet(Ilinks+2, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
-				Verplaats(grid, '>');
+				move(grid, '>');
 			}
 		}
 	}
 
-	void KijkLinks(Grid grid) {
+	void checkLeft(Grid grid) {
 		if (this.type == '-'){
 			if(!grid.getBezet(Ilinks-1, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '|'){
 			if (!grid.getBezet(Ilinks, Jonder-3) && !grid.getBezet(Ilinks, Jonder-2)&&
 					!grid.getBezet(Ilinks, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '.'||this.type == '^'||this.type == '3'){
 			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks-1, Jonder-1)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == 'L' || this.type == '2' || this.type == '5'){
 			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks-1, Jonder-1) &&
 					!grid.getBezet(Ilinks-1, Jonder-2)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '�'){
 			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks+1, Jonder-1)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '7'){
 			if (!grid.getBezet(Ilinks, Jonder) && !grid.getBezet(Ilinks, Jonder-1) &&
 					!grid.getBezet(Ilinks-1, Jonder-2)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == 't' || this.type == 's'){
 			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks, Jonder-1)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (type == 'T'){
 			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks, Jonder+1)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == 'S'){
 			if (!grid.getBezet(Ilinks-1, Jonder-2) && !grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == 'z'){
 			if (!grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == 'Z'){
 			if (!grid.getBezet(Ilinks, Jonder-2) && !grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks-1, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '0'){
 			if (!grid.getBezet(Ilinks-1, Jonder) && !grid.getBezet(Ilinks, Jonder-1) && !grid.getBezet(Ilinks, Jonder-2)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '1'){
 			if (!grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks+1, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		} else if (this.type == '4'){
 			if (!grid.getBezet(Ilinks, Jonder-2) && !grid.getBezet(Ilinks-1, Jonder-1) && !grid.getBezet(Ilinks, Jonder)){
-				Verplaats(grid, '<');
+				move(grid, '<');
 			}
 		}
 	}
 
-	private void Verplaats(Grid grid, char richting){
+	private void move(Grid grid, char richting){
 		for (Block blok : BlokLijst){
 			grid.setBezet(this.Ilinks+breedteindex[BlokLijst.indexOf(blok)], this.Jonder+hoogteindex[BlokLijst.indexOf(blok)], false);
 		}
@@ -306,17 +306,17 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	void zetBlokkenOver(Field field){
+	void layDownBlocks(Field field){
 		for(Block blok : BlokLijst){
 			Field.LigBlokken.add(blok);
 			if(blok.j == 1){
-				field.StopSpel();
+				field.StopGame();
 				break;
 			}
 		}
 	}
 
-	void roteer(Grid grid){
+	void rotate(Grid grid){
 		for (Block blok : BlokLijst){
 			grid.setBezet(this.Ilinks+breedteindex[BlokLijst.indexOf(blok)], this.Jonder+hoogteindex[BlokLijst.indexOf(blok)], false);
 		}
@@ -421,12 +421,12 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	void teken(Graphics graphics){
+	void draw(Graphics graphics){
 		for(Block blok : BlokLijst){
 			blok.i = this.Ilinks+breedteindex[BlokLijst.indexOf(blok)];
 			blok.j = this.Jonder+hoogteindex[BlokLijst.indexOf(blok)];
-			blok.setPositie(blok.i, blok.j);
-			blok.teken(graphics);
+			blok.setPosition(blok.i, blok.j);
+			blok.draw(graphics);
 		}
 	}
 }
