@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="adad5567-6a3a-4711-8d00-6319db046543" name="Default" comment="" />
+    <list default="true" id="adad5567-6a3a-4711-8d00-6319db046543" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/tetris" beforeDir="false" afterPath="$PROJECT_DIR$/tetris" afterDir="false" />
+    </list>
     <ignored path="tetris.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -23,8 +25,8 @@
       <file leaf-file-name="Blok.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/tetris/Blok.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-300">
-              <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+            <state relative-caret-position="187">
+              <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -845,8 +847,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tetris/Blok.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-300">
-          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+        <state relative-caret-position="187">
+          <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
