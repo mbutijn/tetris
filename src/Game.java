@@ -3,7 +3,7 @@ import java.util.*;
 
 import javax.swing.JFrame;
 
-public class Spel {
+public class Game {
 	static int xBound = 600;
 	static int yBound = 750;
 
@@ -29,10 +29,9 @@ public class Spel {
 
 	static void saveScore() {
 		String lastScore = getDate() + ":  " + String.format("%04d", Field.points);
-		ObjectInputStream inputstream;
 
 		try {
-			inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
+			ObjectInputStream inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
 			String oudehighscore = (String) inputstream.readObject();
 			String highscore = lastScore + "\n" + oudehighscore;
 			Field.highscore.setText(highscore);

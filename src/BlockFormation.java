@@ -59,101 +59,101 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	boolean checkBelow(Grid grid) {
-		boolean neergekomen = false;
+		boolean down = false;
 		if(type == '-'){
 			if (grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under +1) ||
 					grid.getHoldsBlock(I_left +2, J_under +1) || grid.getHoldsBlock(I_left +3, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == '|'){
 			if(grid.getHoldsBlock(I_left +1, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == '.' || type == 'L' || type == '0'){ // two wide and flat bottom
 			if (grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == '�' || type == 't' || type == '3'){ // three wide
 			if(grid.getHoldsBlock(I_left, J_under +1)|| grid.getHoldsBlock(I_left +1, J_under +1)|| grid.getHoldsBlock(I_left +2, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == '7'){
 			if(grid.getHoldsBlock(I_left, J_under -1)|| grid.getHoldsBlock(I_left +1, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == '^'){
 			if(grid.getHoldsBlock(I_left, J_under +1)|| grid.getHoldsBlock(I_left +1, J_under)|| grid.getHoldsBlock(I_left +2, J_under)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if (type == 'T'){
 			if (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left +1, J_under +1) || grid.getHoldsBlock(I_left +2, J_under)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == 's'){
 			if (grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under +1) || grid.getHoldsBlock(I_left +2, J_under)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if (type == 'S'|| type == '4'){
 			if (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left +1, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if (type == 'z'){
 			if (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left +1, J_under +1) || grid.getHoldsBlock(I_left +2, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if (type == 'Z' || type == '5'){
 			if(grid.getHoldsBlock(I_left, J_under +1) || grid.getHoldsBlock(I_left +1, J_under)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid,'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if(type == '1'){
 			if(grid.getHoldsBlock(I_left, J_under)|| grid.getHoldsBlock(I_left +1, J_under)|| grid.getHoldsBlock(I_left +2, J_under +1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		} else if (type == '2'){
 			if(grid.getHoldsBlock(I_left, J_under +1)|| grid.getHoldsBlock(I_left +1, J_under -1)){
-				neergekomen = true;
+				down = true;
 			} else {
 				move(grid, 'v');
-				neergekomen = false;
+				down = false;
 			}
 		}
-		return neergekomen;
+		return down;
 	}
 
 	void checkRight(Grid grid) {
@@ -282,9 +282,8 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	private void move(Grid grid, char direction){
-		for (Block blok : blockList){
-			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(blok)], J_under + heightIndex[blockList.indexOf(blok)], false);
-		}
+		changeBlockMatrix(grid, false);
+
 		if(direction == '>'){
 			I_left++;
 		} else if (direction == '<') {
@@ -292,8 +291,12 @@ class BlockFormation extends ArrayList<Block> {
 		} else if (direction == 'v'){
 			J_under++;
 		}
+		changeBlockMatrix(grid,true);
+	}
+
+	private void changeBlockMatrix(Grid grid, boolean occupied){
 		for (Block block : blockList){
-			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], true);
+			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], occupied);
 		}
 	}
 
@@ -308,9 +311,8 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	void rotate(Grid grid){
-		for (Block blok : blockList){
-			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(blok)], J_under + heightIndex[blockList.indexOf(blok)], false);
-		}
+		changeBlockMatrix(grid, false);
+
 		if(type == '-'){
 			if(J_under > 3 && J_under < Grid.heightNumber){
 				widthIndex = new int[] {1, 1, 1, 1};
@@ -407,17 +409,16 @@ class BlockFormation extends ArrayList<Block> {
 			type = '0';
 		}
 
-		for (Block block : blockList){
-			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], true);
-		}
+		changeBlockMatrix(grid, true);
 	}
 
 	void draw(Graphics graphics){
-		for(Block blok : blockList){
-			blok.i = I_left + widthIndex[blockList.indexOf(blok)];
-			blok.j = J_under + heightIndex[blockList.indexOf(blok)];
-			blok.setPosition(blok.i, blok.j);
-			blok.draw(graphics);
+		for(Block block : blockList){
+			block.i = I_left + widthIndex[blockList.indexOf(block)];
+			block.j = J_under + heightIndex[blockList.indexOf(block)];
+			block.setPosition(block.i, block.j);
+			block.draw(graphics);
 		}
 	}
+
 }

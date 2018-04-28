@@ -8,23 +8,23 @@ public class Grid {
 	Color color_free = new Color(50, 200, 50);
 	private static int dimension, distance;
 	static int widthNumber, heightNumber;
-	static ArrayList<Integer> fullRows = new ArrayList<Integer>();
+	static ArrayList<Integer> fullRows = new ArrayList<>();
 	private boolean [][] blockMatrix;
 
 	Grid(int dimension, int distance, int widthNumber, int heightNumber){
-		Grid.heightNumber = heightNumber;
 		Grid.dimension = dimension;
 		Grid.distance = distance;
 		Grid.widthNumber = widthNumber;
+		Grid.heightNumber = heightNumber;
 		blockMatrix = new boolean[heightNumber+2][widthNumber+3];
-	}
-
-	static int getDistance() {
-		return distance;
 	}
 
 	static int getDimension() {
 		return dimension;
+	}
+
+	static int getDistance() {
+		return distance;
 	}
 
 	void setHoldsBlock(int i, int j, boolean occupied){
@@ -67,4 +67,5 @@ public class Grid {
 			if (!b) return false;
 		return true;
 	}
+
 }

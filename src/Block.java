@@ -38,8 +38,8 @@ public class Block {
 		setPosition(this.i, this.j);
 
 		Point2D center = new Point2D.Float(this.position.getX(), this.position.getY());
-		RadialGradientPaint rgp = new RadialGradientPaint(center, (float) (1.2*Grid.getDimension()), shine, colors);
-		g2d.setPaint(rgp);
+		g2d.setPaint(new RadialGradientPaint(center, (float) (1.2*Grid.getDimension()), shine, colors));
 		g2d.fillRect(this.position.getX(), this.position.getY(), Grid.getDimension()-4*Grid.getDistance(), Grid.getDimension()-4*Grid.getDistance());
 	}
+
 }

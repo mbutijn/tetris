@@ -11,7 +11,6 @@ public class Field extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
 
 	private Grid grid = new Grid(30, 2, 13, 21);
-//	private Grid grid = new Grid(30, 2, 5, 12);
 	private static GreyBoxes greyBoxes;
 	private static ArrayList<BlockFormation> blockFormations = new ArrayList<>();
 	static ArrayList<Block> groundBlocks = new ArrayList<>();
@@ -39,10 +38,8 @@ public class Field extends JFrame implements KeyListener {
 		panel_points.add(new JLabel("Points: "));
 		panel_points.add(scoreField);
 
-		ObjectInputStream inputstream;
-
 		try {
-			inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
+			ObjectInputStream inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
 			String highscores = (String) inputstream.readObject();
 			highscore.setText(highscores);
 		} catch(Exception ex) {
@@ -64,8 +61,8 @@ public class Field extends JFrame implements KeyListener {
 		timer.start();
 	}
 
-	private void setBFL(ArrayList<BlockFormation> BlokFormations){
-		Field.blockFormations = BlokFormations;
+	private void setBlockFormationList(ArrayList<BlockFormation> blockFormations){
+		Field.blockFormations = blockFormations;
 	}
 
 	private ArrayList<BlockFormation> getBlockFormationList(){
@@ -75,29 +72,29 @@ public class Field extends JFrame implements KeyListener {
 	private ActionListener run = new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
 			count++;
-			greyBoxes.paintImmediately(new Rectangle(0, 0, Spel.xBound, Spel.yBound));
+			greyBoxes.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
 			if(blockFormations.isEmpty()){
-				blockFormations.add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber -5)), selectType(), grid));
-				setBFL(blockFormations);
+				blockFormations.add(new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid));
+				setBlockFormationList(blockFormations);
 			}
 			if (count == 10){
 
 				if (getBlockFormationList().get(0).checkBelow(grid)){
-					makeNewOne(getBlockFormationList().get(0));
+					makeNewBlockFormation(getBlockFormationList().get(0));
 				}
 				count = 0;
 			}
 		}
 	};
 
-	private void makeNewOne(BlockFormation blockFormation) {
+	private void makeNewBlockFormation(BlockFormation blockFormation) {
 		blockFormation.layDownBlocks(this);
 		grid.makeFullRows();
 		if(!removeIndex.isEmpty()){
 			removeEveryBlock();
 		}
 		getBlockFormationList().remove(0);
-		getBlockFormationList().add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber -5)), selectType(), grid));
+		getBlockFormationList().add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber - 5)), selectType(), grid));
 	}
 
 	private void removeEveryBlock(){
@@ -130,25 +127,23 @@ public class Field extends JFrame implements KeyListener {
 	}
 
 	private char selectType() {
-		char type;
-		double select =  Math.random();
+		double select = Math.random();
 		if(select < 1.0/7.0){
-			type = '-';
+			return '-';
 		} else if (select < 2.0/7.0){
-			type = '.';
+			return '.';
 		} else if (select < 3.0/7.0){
-			type = 'L';
+			return 'L';
 		} else if (select < 4.0/7.0){
-			type = 't';
+			return 't';
 		} else if (select < 5.0/7.0){
-			type = 's';
+			return 's';
 		} else if (select < 6.0/7.0){
-			type = 'z';
+			return 'z';
 		} else {
-			type = '0';
+			return '0';
 		}
-		//type = '-';
-		return type;
+
 	}
 
 	private void setKeyBoardListeners() {
@@ -200,7 +195,7 @@ public class Field extends JFrame implements KeyListener {
 	void stopGame() {
 		timer.stop();
 		JOptionPane.showMessageDialog(null, "Game over! \n" + "You scored " + points + " points!");
-		Spel.saveScore();
+		Game.saveScore();
 	}
 
 	class GreyBoxes extends JPanel {
@@ -228,8 +223,9 @@ public class Field extends JFrame implements KeyListener {
 				}
 			}
 
-			for (BlockFormation blockFormation: getBlockFormationList()){
-				blockFormation.draw(g2d);
+			ArrayList<BlockFormation> blockFormations = getBlockFormationList();
+			if (!blockFormations.isEmpty()) {
+				blockFormations.get(0).draw(g2d);
 			}
 
 			for (Block groundBlock : groundBlocks){
