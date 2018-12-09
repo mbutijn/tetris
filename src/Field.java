@@ -78,9 +78,11 @@ public class Field extends JFrame implements KeyListener {
 				setBlockFormationList(blockFormations);
 			}
 			if (count == 10){
-
-				if (getBlockFormationList().get(0).checkBelow(grid)){
-					makeNewBlockFormation(getBlockFormationList().get(0));
+				BlockFormation blockFormation = getBlockFormationList().get(0);
+				if (blockFormation.IsBelowOccupied(grid)){
+					makeNewBlockFormation(blockFormation);
+				} else {
+					blockFormation.moveOneTile(grid, 'v');
 				}
 				count = 0;
 			}
@@ -143,7 +145,7 @@ public class Field extends JFrame implements KeyListener {
 		} else {
 			return '0';
 		}
-
+//		return '-';
 	}
 
 	private void setKeyBoardListeners() {
@@ -160,13 +162,19 @@ public class Field extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent event) {
 		int code = event.getKeyCode();
-
+		BlockFormation blockFormation = getBlockFormationList().get(0);
 		if (code == KeyEvent.VK_DOWN) {
-			getBlockFormationList().get(0).checkBelow(grid);
+			if (!blockFormation.IsBelowOccupied(grid)){
+				blockFormation.moveOneTile(grid,'v');
+			}
 		} else if (code == KeyEvent.VK_RIGHT) {
-			getBlockFormationList().get(0).checkRight(grid);
+			if (blockFormation.IsRightFree(grid)){
+				blockFormation.moveOneTile(grid, '>');
+			}
 		} else if (code == KeyEvent.VK_LEFT){
-			getBlockFormationList().get(0).checkLeft(grid);
+			if (blockFormation.IsLeftFree(grid)){
+				blockFormation.moveOneTile(grid, '<');
+			}
 		} else if (code == KeyEvent.VK_ESCAPE){
 			if (timer.isRunning()) {
 				timer.stop();
@@ -174,15 +182,17 @@ public class Field extends JFrame implements KeyListener {
 				timer.start();
 			}
 		} else if (code == KeyEvent.VK_SPACE){
-			getBlockFormationList().get(0).rotate(grid);
+			blockFormation.rotate(grid);
 		} else if (code == KeyEvent.VK_F){
 			try {
 				timer.setDelay(timer.getDelay() - 10);
+				System.out.println("Timer delay -= 10 ms");
 			} catch(Exception exception) {
 				System.out.println("Maximum speed");
 			}
 		} else if (code == KeyEvent.VK_S){
 			timer.setDelay(timer.getDelay() + 10);
+			System.out.println("Timer delay += 10 ms");
 		}
 	}
 
@@ -211,14 +221,16 @@ public class Field extends JFrame implements KeyListener {
 					grid.setHoldsBlock(Grid.widthNumber +1, j, true);
 					grid.setHoldsBlock(Grid.widthNumber +2, j, true);
 					grid.setHoldsBlock(0, j, true);
-					/*
-					if(grid.getHoldsBlock(i, j)){
-						g2d.setColor(grid.color_occupied);
-					}else {
-						g2d.setColor(grid.color_free);
+
+					if (false) { // Makes background tiles red and green
+						if (grid.getHoldsBlock(i, j)) {
+							g2d.setColor(grid.color_occupied);
+						} else { // Makes all background tiles grey
+							g2d.setColor(grid.color_free);
+						}
+					} else {
+						g2d.setColor(grid.color);
 					}
-					*/
-					g2d.setColor(grid.color);
 					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension()-2*Grid.getDistance(), Grid.getDimension()-2*Grid.getDistance());
 				}
 			}
@@ -240,4 +252,5 @@ public class Field extends JFrame implements KeyListener {
 			return block2.getj().compareTo(block1.getj());
 		}
 	}
+
 }
