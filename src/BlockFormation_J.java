@@ -1,7 +1,7 @@
 import java.awt.*;
 
-class BlockFormation_mL extends BlockFormation{
-    BlockFormation_mL(BlockFormation bf) {
+class BlockFormation_J extends BlockFormation{
+    BlockFormation_J(BlockFormation bf) {
         super(bf);
         bf.widthIndex = new int[]{1, 1, 1, 0};
         bf.heightIndex = new int[]{-2, -1, 0, 0};
@@ -10,11 +10,11 @@ class BlockFormation_mL extends BlockFormation{
     }
 
     static boolean checkBelow(Grid grid) {
-        if (blockFormation.type == '0') { // = mirrored L
+        if (orientation == Orientation.FIRST) {
             return (grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under + 1));
-        } else if (blockFormation.type == '¬') {
+        } else if (orientation == Orientation.SECOND) {
             return (grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under) || grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under) || grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under + 1));
-        } else if (blockFormation.type == '2') {
+        } else if (orientation == Orientation.THIRD) {
             return (grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under - 1));
         } else {
             return (grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under + 1));
@@ -22,11 +22,11 @@ class BlockFormation_mL extends BlockFormation{
     }
 
     static boolean checkRight(Grid grid) {
-        if (blockFormation.type == '0') {
+        if (orientation == Orientation.FIRST) {
             return (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 2) && !grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 1) && !grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under));
-        } else if (blockFormation.type == '¬'){
+        } else if (orientation == Orientation.SECOND){
             return (!grid.getHoldsBlock(blockFormation.I_left + 3, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left + 3, blockFormation.J_under - 1));
-        } else if (blockFormation.type == '2'){
+        } else if (orientation == Orientation.THIRD){
             return (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 2) && !grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under - 1) && !grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under));
         } else {
             return (!grid.getHoldsBlock(blockFormation.I_left + 3, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under - 1));
@@ -34,11 +34,11 @@ class BlockFormation_mL extends BlockFormation{
     }
 
     static boolean checkLeft(Grid grid) {
-        if (blockFormation.type == '0') {
+        if (orientation == Orientation.FIRST) {
             return (!grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under - 1) && !grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under - 2));
-        } else if (blockFormation.type == '¬'){
+        } else if (orientation == Orientation.SECOND){
             return (!grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under - 1) && !grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under));
-        } else if (blockFormation.type == '2'){
+        } else if (orientation == Orientation.THIRD){
             return (!grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under - 1) && !grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under - 2));
         } else {
             return (!grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under - 1));
@@ -46,26 +46,26 @@ class BlockFormation_mL extends BlockFormation{
     }
 
     static void rotate(Grid grid) {
-        if (blockFormation.type == '0') {
+        if (orientation == Orientation.FIRST) {
             if (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 1)) {
                 blockFormation.widthIndex = new int[]{0, 1, 2, 2};
                 blockFormation.heightIndex = new int[]{-1, -1, -1, 0};
-                blockFormation.type = '¬';
+                orientation = Orientation.SECOND;;
             }
-        } else if (blockFormation.type == '¬') {
+        } else if (orientation == Orientation.SECOND) {
             blockFormation.widthIndex = new int[]{1, 0, 0, 0};
             blockFormation.heightIndex = new int[]{-2, -2, -1, 0};
-            blockFormation.type = '2';
-        } else if (blockFormation.type == '2') {
+            orientation = Orientation.THIRD;;
+        } else if (orientation == Orientation.THIRD) {
             if (!grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under)) {
                 blockFormation.widthIndex = new int[]{0, 0, 1, 2};
                 blockFormation.heightIndex = new int[]{-1, 0, 0, 0};
-                blockFormation.type = '3';
+                orientation = Orientation.FOURTH;;
             }
-        } else if (blockFormation.type == '3') {
+        } else if (orientation == Orientation.FOURTH) {
             blockFormation.widthIndex = new int[]{1, 1, 1, 0};
             blockFormation.heightIndex = new int[]{-2, -1, 0, 0};
-            blockFormation.type = '0';
+            orientation = Orientation.FIRST;
         }
     }
 }

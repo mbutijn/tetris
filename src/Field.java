@@ -82,7 +82,7 @@ public class Field extends JFrame implements KeyListener {
 				if (blockFormation.IsBelowOccupied(grid)){
 					makeNewBlockFormation(blockFormation);
 				} else {
-					blockFormation.moveOneTile(grid, 'v');
+					blockFormation.moveOneTile(grid, Direction.DOWN);
 				}
 				count = 0;
 			}
@@ -128,24 +128,24 @@ public class Field extends JFrame implements KeyListener {
 		}
 	}
 
-	private char selectType() {
+	private Sort selectType() {
 		double select = Math.random();
 		if(select < 1.0/7.0){
-			return '-';
+			return Sort.ONE_BY_FOUR;
 		} else if (select < 2.0/7.0){
-			return '.';
+			return Sort.TWO_BY_TWO;
 		} else if (select < 3.0/7.0){
-			return 'L';
+			return Sort.L;
 		} else if (select < 4.0/7.0){
-			return 't';
+			return Sort.T;
 		} else if (select < 5.0/7.0){
-			return 's';
+			return Sort.S;
 		} else if (select < 6.0/7.0){
-			return 'z';
+			return Sort.Z;
 		} else {
-			return '0';
+			return Sort.J;
 		}
-//		return '-';
+//		return Sort.S;
 	}
 
 	private void setKeyBoardListeners() {
@@ -165,15 +165,15 @@ public class Field extends JFrame implements KeyListener {
 		BlockFormation blockFormation = getBlockFormationList().get(0);
 		if (code == KeyEvent.VK_DOWN) {
 			if (!blockFormation.IsBelowOccupied(grid)){
-				blockFormation.moveOneTile(grid,'v');
+				blockFormation.moveOneTile(grid,Direction.DOWN);
 			}
 		} else if (code == KeyEvent.VK_RIGHT) {
 			if (blockFormation.IsRightFree(grid)){
-				blockFormation.moveOneTile(grid, '>');
+				blockFormation.moveOneTile(grid, Direction.RIGHT);
 			}
 		} else if (code == KeyEvent.VK_LEFT){
 			if (blockFormation.IsLeftFree(grid)){
-				blockFormation.moveOneTile(grid, '<');
+				blockFormation.moveOneTile(grid, Direction.LEFT);
 			}
 		} else if (code == KeyEvent.VK_ESCAPE){
 			if (timer.isRunning()) {
@@ -223,12 +223,12 @@ public class Field extends JFrame implements KeyListener {
 					grid.setHoldsBlock(0, j, true);
 
 					if (false) { // Makes background tiles red and green
-						if (grid.getHoldsBlock(i, j)) {
+						if (grid.getHoldsBlock(i, j)) { // red for occupied
 							g2d.setColor(grid.color_occupied);
-						} else { // Makes all background tiles grey
+						} else { // green for free
 							g2d.setColor(grid.color_free);
 						}
-					} else {
+					} else { // Makes all background tiles grey
 						g2d.setColor(grid.color);
 					}
 					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension()-2*Grid.getDistance(), Grid.getDimension()-2*Grid.getDistance());
