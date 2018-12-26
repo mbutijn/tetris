@@ -7,8 +7,8 @@ class BlockFormation extends ArrayList<Block> {
 	private static final long serialVersionUID = 1L;
 	static BlockFormation blockFormation;
 	Color color;
-	private static Sort type;
-	private static List<Block> blockList;
+	private Sort type;
+	private List<Block> blockList;
 	int[] widthIndex, heightIndex;
 	int I_left, J_under;
 	static Orientation orientation;
@@ -33,7 +33,7 @@ class BlockFormation extends ArrayList<Block> {
 			new BlockFormation_S(this);
 		} else if (type == Sort.Z) {
 			new BlockFormation_Z(this);
-		} else if (type == Sort.J) {
+		} else {
 			new BlockFormation_J(this);
 		}
 
@@ -46,7 +46,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	static boolean IsBelowOccupied(Grid grid) {
+	boolean IsBelowOccupied(Grid grid) {
 		if (type == Sort.ONE_BY_FOUR){
 			return BlockFormation_1b4.checkBelow(grid);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -64,7 +64,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	static boolean IsRightFree(Grid grid) {
+	boolean IsRightFree(Grid grid) {
 		if (type == Sort.ONE_BY_FOUR) {
 			return BlockFormation_1b4.checkRight(grid);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -82,7 +82,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	static boolean IsLeftFree(Grid grid) {
+	boolean IsLeftFree(Grid grid) {
 		if (type == Sort.ONE_BY_FOUR) {
 			return BlockFormation_1b4.checkLeft(grid);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -113,15 +113,15 @@ class BlockFormation extends ArrayList<Block> {
 		changeBlockMatrix(grid, true);
 	}
 
-	private static void changeBlockMatrix(Grid grid, boolean occupied) {
+	private void changeBlockMatrix(Grid grid, boolean occupied) {
 		for (Block block : blockList) {
-			grid.setHoldsBlock(blockFormation.I_left + blockFormation.widthIndex[blockList.indexOf(block)], blockFormation.J_under + blockFormation.heightIndex[blockList.indexOf(block)], occupied);
+			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], occupied);
 		}
 	}
 
 	void layDownBlocks(Field field) {
 		for (Block block : blockList) {
-			Field.groundBlocks.add(block);
+			field.groundBlocks.add(block);
 			if (block.j == 1) {
 				field.stopGame();
 				break;
@@ -129,7 +129,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	static void rotate(Grid grid) {
+	void rotate_bl(Grid grid) {
 		changeBlockMatrix(grid, false);
 
 		if (type == Sort.ONE_BY_FOUR) {
@@ -149,12 +149,17 @@ class BlockFormation extends ArrayList<Block> {
 		changeBlockMatrix(grid, true);
 	}
 
-	void draw(Graphics graphics) {
+	void setCoordinates() {
 		for (Block block : blockList) {
 			block.i = I_left + widthIndex[blockList.indexOf(block)];
 			block.j = J_under + heightIndex[blockList.indexOf(block)];
+		}
+	}
+
+	void render(Graphics graphics) {
+		for (Block block : blockList) {
 			block.setPosition(block.i, block.j);
-			block.draw(graphics);
+			block.render(graphics);
 		}
 	}
 

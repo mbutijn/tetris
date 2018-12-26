@@ -27,21 +27,21 @@ public class Game {
 		return hour + ":" + minute + "  " + day + "-" + month + "-" + year;
 	}
 
-	static void saveScore() {
-		String lastScore = getDate() + ":  " + String.format("%04d", Field.points);
+	static void saveScore(Field field) {
+		String lastScore = getDate() + ":  " + String.format("%04d", field.points);
 
 		try {
 			ObjectInputStream inputstream = new ObjectInputStream(new FileInputStream("Game.ser"));
 			String oudehighscore = (String) inputstream.readObject();
 			String highscore = lastScore + "\n" + oudehighscore;
-			Field.highscore.setText(highscore);
+			field.highscore.setText(highscore);
 		} catch(Exception ex) {
 			ex.printStackTrace();
-			Field.highscore.setText(lastScore);
+			field.highscore.setText(lastScore);
 		}
 		try {
 			ObjectOutputStream outputstream = new ObjectOutputStream(new FileOutputStream("Game.ser"));
-			outputstream.writeObject(Field.highscore.getText());
+			outputstream.writeObject(field.highscore.getText());
 			outputstream.close();
 		} catch(IOException ex) {
 			ex.printStackTrace();
