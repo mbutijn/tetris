@@ -147,8 +147,17 @@ public class Field extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
-	void givePoint() {
-		points++;
+	void givePoints(int rowsCleared) {
+		if (rowsCleared == 1) {
+			points += 50;
+		} else if (rowsCleared == 2){
+			points += 150;
+		} else if (rowsCleared == 3){
+			points += 400;
+		} else if (rowsCleared == 4){
+			points += 900;
+		}
+
 		scoreField.setText("" + points);
 	}
 

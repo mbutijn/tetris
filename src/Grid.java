@@ -26,6 +26,7 @@ public class Grid {
 				fullRows.add(j);
 			}
 		}
+
 		removeLines(fullRows, field);
 	}
 
@@ -42,10 +43,10 @@ public class Grid {
 				if(groundBlock.j == rowNumber){
 					this.setHoldsBlock(groundBlock.i, groundBlock.j, false);
 					field.removeIndex.add(field.groundBlocks.indexOf(groundBlock));
-					field.givePoint();
 				}
 			}
 		}
+		field.givePoints(fullRows.size());
 	}
 
 	void setHoldsBlock(int i, int j, boolean occupied){
