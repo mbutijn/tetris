@@ -11,7 +11,7 @@ class BlockFormation extends ArrayList<Block> {
 	private List<Block> blockList = new ArrayList<>();
 	int[] widthIndices, heightIndices;
 	int I_left, J_under;
-	static Orientation orientation;
+	private Orientation orientation;
 	private Grid grid;
 
 	BlockFormation(BlockFormation bf){
@@ -49,55 +49,55 @@ class BlockFormation extends ArrayList<Block> {
 
 	boolean IsBelowOccupied() {
 		if (type == Sort.ONE_BY_FOUR){
-			return BlockFormation_1b4.checkBelow(grid);
+			return BlockFormation_1b4.checkBelow(grid, orientation);
 		} else if (type == Sort.TWO_BY_TWO) {
 			return BlockFormation_2b2.checkBelow(grid);
 		} else if (type == Sort.L){
-			return BlockFormation_L.checkBelow(grid);
+			return BlockFormation_L.checkBelow(grid, orientation);
 		} else if (type == Sort.T) {
-			return BlockFormation_T.checkBelow(grid);
+			return BlockFormation_T.checkBelow(grid, orientation);
 		}  else if (type == Sort.S) {
-			return BlockFormation_S.checkBelow(grid);
+			return BlockFormation_S.checkBelow(grid, orientation);
 		} else if (type == Sort.Z) {
-			return BlockFormation_Z.checkBelow(grid);
+			return BlockFormation_Z.checkBelow(grid, orientation);
 		} else {
-			return BlockFormation_J.checkBelow(grid);
+			return BlockFormation_J.checkBelow(grid, orientation);
 		}
 	}
 
 	boolean IsRightFree() {
 		if (type == Sort.ONE_BY_FOUR) {
-			return BlockFormation_1b4.checkRight(grid);
+			return BlockFormation_1b4.checkRight(grid, orientation);
 		} else if (type == Sort.TWO_BY_TWO) {
 			return BlockFormation_2b2.checkRight(grid);
 		} else if (type == Sort.L) {
-			return BlockFormation_L.checkRight(grid);
+			return BlockFormation_L.checkRight(grid, orientation);
 		} else if (type == Sort.T){
-			return BlockFormation_T.checkRight(grid);
+			return BlockFormation_T.checkRight(grid, orientation);
 		} else if (type == Sort.S) {
-			return BlockFormation_S.checkRight(grid);
+			return BlockFormation_S.checkRight(grid, orientation);
 		} else if (type == Sort.Z) {
-			return BlockFormation_Z.checkRight(grid);
+			return BlockFormation_Z.checkRight(grid, orientation);
 		} else {
-			return BlockFormation_J.checkRight(grid);
+			return BlockFormation_J.checkRight(grid, orientation);
 		}
 	}
 
 	boolean IsLeftFree() {
 		if (type == Sort.ONE_BY_FOUR) {
-			return BlockFormation_1b4.checkLeft(grid);
+			return BlockFormation_1b4.checkLeft(grid, orientation);
 		} else if (type == Sort.TWO_BY_TWO) {
 			return BlockFormation_2b2.checkLeft(grid);
 		} else if (type == Sort.L) {
-			return BlockFormation_L.checkLeft(grid);
+			return BlockFormation_L.checkLeft(grid, orientation);
 		} else if (type == Sort.T){
-			return BlockFormation_T.checkLeft(grid);
+			return BlockFormation_T.checkLeft(grid, orientation);
 		} else if (type == Sort.S) {
-			return BlockFormation_S.checkLeft(grid);
+			return BlockFormation_S.checkLeft(grid, orientation);
 		} else if (type == Sort.Z) {
-			return BlockFormation_Z.checkLeft(grid);
+			return BlockFormation_Z.checkLeft(grid, orientation);
 		} else {
-			return BlockFormation_J.checkLeft(grid);
+			return BlockFormation_J.checkLeft(grid, orientation);
 		}
 	}
 
@@ -134,17 +134,17 @@ class BlockFormation extends ArrayList<Block> {
 		changeBlockMatrix(grid, false);
 
 		if (type == Sort.ONE_BY_FOUR) {
-			BlockFormation_1b4.rotate(grid);
+			orientation = BlockFormation_1b4.rotate(grid, orientation);
 		} else if (type == Sort.L) {
-			BlockFormation_L.rotate(grid);
+			orientation = BlockFormation_L.rotate(grid, orientation);
 		} else if (type == Sort.T) {
-			BlockFormation_T.rotate(grid);
+			orientation = BlockFormation_T.rotate(grid, orientation);
 		} else if (type == Sort.S) {
-			BlockFormation_S.rotate(grid);
+			orientation = BlockFormation_S.rotate(grid, orientation);
 		} else if (type == Sort.Z) {
-			BlockFormation_Z.rotate(grid);
+			orientation = BlockFormation_Z.rotate(grid, orientation);
 		} else if (type == Sort.J) {
-			BlockFormation_J.rotate(grid);
+			orientation = BlockFormation_J.rotate(grid, orientation);
 		}
 
 		changeBlockMatrix(grid, true);
@@ -152,8 +152,8 @@ class BlockFormation extends ArrayList<Block> {
 
 	void setCoordinates() {
 		for (Block block : blockList) {
-			block.i = I_left + widthIndices[blockList.indexOf(block)];
-			block.j = J_under + heightIndices[blockList.indexOf(block)];
+			block.setI(I_left + widthIndices[blockList.indexOf(block)]);
+			block.setJ(J_under + heightIndices[blockList.indexOf(block)]);
 		}
 	}
 

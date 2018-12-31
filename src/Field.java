@@ -12,7 +12,7 @@ public class Field extends JFrame implements KeyListener {
 
 	private Grid grid = new Grid(30, 2, 13, 21);
 	private GreyBoxes greyBoxes = new GreyBoxes();
-	private BlockFormation currentBlockFormation;
+	private BlockFormation currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 	ArrayList<Block> groundBlocks = new ArrayList<>();
 	ArrayList<Integer> removeIndex = new ArrayList<>();
 	private Timer timer;
@@ -20,7 +20,7 @@ public class Field extends JFrame implements KeyListener {
 	private JTextField scoreField = new JTextField("0", 4);
 	JTextArea highscore = new JTextArea("0", 0, 0);
 	private final int TIMER_PERIOD = 25; // ms
-	private int dropPeriod = 10; // ms
+	private int dropPeriod = 10;
 
 	Field(){
 		setContentPane(greyBoxes);
@@ -56,7 +56,6 @@ public class Field extends JFrame implements KeyListener {
 	}
 
 	void startGame() {
-		currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 		timer = new Timer(TIMER_PERIOD, run);
 		timer.setRepeats(true);
 		timer.start();
@@ -64,7 +63,7 @@ public class Field extends JFrame implements KeyListener {
 
 	private ActionListener run = new ActionListener() {
 		private int count = 0;
-		public void actionPerformed(ActionEvent evt) { // runs every 50 miliseconds
+		public void actionPerformed(ActionEvent evt) { // runs every 25 miliseconds
 			count++;
 			greyBoxes.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
 
@@ -77,10 +76,10 @@ public class Field extends JFrame implements KeyListener {
 						removeEveryBlock();
 					}
 
-					// make a new blockformation
+					// overwrite "blockformation" with a new instance
 					currentBlockFormation = new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 				} else {
-					currentBlockFormation.moveOneTile(Direction.DOWN); // the blockformation moves down one tile
+					currentBlockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
 				}
 				count = 0;
 			}
@@ -107,7 +106,7 @@ public class Field extends JFrame implements KeyListener {
 		// drop the groundblocks
 		for (int fullRowIndex = 0; fullRowIndex < grid.fullRowIndices.size(); fullRowIndex++){
 			for (Block groundBlock: groundBlocks){
-				if (groundBlock.getj() < grid.fullRowIndices.get(fullRowIndex)){
+				if (groundBlock.getJ() < grid.fullRowIndices.get(fullRowIndex)){
 					groundBlock.drop(grid);
 				}
 			}
@@ -131,7 +130,7 @@ public class Field extends JFrame implements KeyListener {
 		} else {
 			return Sort.J;
 		}
-//		return Sort.ONE_BY_FOUR;
+//		return Sort.Z;
 	}
 
 	private void setKeyBoardListeners() {
@@ -140,7 +139,7 @@ public class Field extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
-	void givePoints(int rowsCleared) {
+	void updateScore(int rowsCleared) {
 		if (rowsCleared == 1) {
 			points += 50;
 		} else if (rowsCleared == 2){
@@ -212,7 +211,7 @@ public class Field extends JFrame implements KeyListener {
 
 			for(int i = 1; i< Grid.widthNumber +1; i++){
 				for(int j = 1; j < Grid.heightNumber +1; j++){
-					if (true) { // Makes background tiles red and green
+					if (false) { // Makes background tiles red and green
 						if (grid.getHoldsBlock(i, j)) { // red for occupied
 							g2d.setColor(grid.color_occupied);
 						} else { // green for free
@@ -238,7 +237,7 @@ public class Field extends JFrame implements KeyListener {
 	public class CustomComparator implements Comparator<Block> {
 		@Override
 		public int compare(Block block1, Block block2) {
-			return block2.getj().compareTo(block1.getj());
+			return block2.getJ().compareTo(block1.getJ());
 		}
 	}
 

@@ -10,7 +10,7 @@ class BlockFormation_1b4 extends BlockFormation {
         bf.color = new Color(0, 235, 235);
     }
 
-    static boolean checkBelow(Grid grid) {
+    static boolean checkBelow(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST) {
             return grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under + 1) ||
                     grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 3, blockFormation.J_under + 1);
@@ -19,7 +19,7 @@ class BlockFormation_1b4 extends BlockFormation {
         }
     }
 
-    static boolean checkRight(Grid grid) {
+    static boolean checkRight(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST) {
             return !grid.getHoldsBlock(blockFormation.I_left + 4, blockFormation.J_under);
         } else {
@@ -28,7 +28,7 @@ class BlockFormation_1b4 extends BlockFormation {
         }
     }
 
-    static boolean checkLeft(Grid grid) {
+    static boolean checkLeft(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST) {
             return !grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under);
         } else {
@@ -36,19 +36,23 @@ class BlockFormation_1b4 extends BlockFormation {
         }
     }
 
-    static void rotate(Grid grid) {
+    static Orientation rotate(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST){
             if (blockFormation.J_under > 3 && blockFormation.J_under < Grid.heightNumber) {
                 blockFormation.widthIndices = new int[]{1, 1, 1, 1};
                 blockFormation.heightIndices = new int[]{0, -1, -2, -3};
-                orientation = Orientation.SECOND;
+                return Orientation.SECOND;
+            } else {
+                return orientation;
             }
-		} else if (orientation == Orientation.SECOND) {
+		} else {
             if (!grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under)
                     && !grid.getHoldsBlock(blockFormation.I_left + 3, blockFormation.J_under)) {
                 blockFormation.widthIndices = new int[]{0, 1, 2, 3};
                 blockFormation.heightIndices = new int[]{0, 0, 0, 0};
-                orientation = Orientation.FIRST;
+                return Orientation.FIRST;
+            } else {
+                return orientation;
             }
         }
     }

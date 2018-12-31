@@ -56,7 +56,7 @@ public class Grid {
 				}
 			}
 		}
-		field.givePoints(fullRows.size());
+		field.updateScore(fullRows.size());
 	}
 
 	void setHoldsBlock(int i, int j, boolean occupied){
