@@ -12,7 +12,7 @@ public class Field extends JFrame implements KeyListener {
 
 	private Grid grid = new Grid(30, 2, 13, 21);
 	private GreyBoxes greyBoxes = new GreyBoxes();
-	private ArrayList<BlockFormation> blockFormations = new ArrayList<>();
+	private BlockFormation currentBlockFormation;
 	ArrayList<Block> groundBlocks = new ArrayList<>();
 	ArrayList<Integer> removeIndex = new ArrayList<>();
 	private Timer timer;
@@ -56,6 +56,7 @@ public class Field extends JFrame implements KeyListener {
 	}
 
 	void startGame() {
+		currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 		timer = new Timer(TIMER_PERIOD, run);
 		timer.setRepeats(true);
 		timer.start();
@@ -66,28 +67,20 @@ public class Field extends JFrame implements KeyListener {
 		public void actionPerformed(ActionEvent evt) { // runs every 50 miliseconds
 			count++;
 			greyBoxes.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
-			if(blockFormations.isEmpty()){
-				blockFormations.add(new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid));
-				setBlockFormationList(blockFormations);
-			}
 
 			if (count >= dropPeriod){ // normally runs every 250 miliseconds
-				BlockFormation blockFormation = getCurrentBlockFormation();
-				if (blockFormation.IsBelowOccupied(grid)){ // blockformation can not move down anymore
-					// move the blocks from blockformation to layblocks
-					blockFormation.layDownBlocks(Field.this);
+				if (currentBlockFormation.IsBelowOccupied()){ // blockformation can not move down anymore
+					// move the blocks from the current blockformation to layDownBlocks
+					currentBlockFormation.layDownBlocks(Field.this);
 					grid.makeFullRows(Field.this);
 					if(!removeIndex.isEmpty()){
 						removeEveryBlock();
 					}
-					// remove the last blockformation from the list of blockformations
-					getBlockFormationList().remove(0);
 
 					// make a new blockformation
-					getBlockFormationList().add(new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber - 5)), selectType(), grid));
-
+					currentBlockFormation = new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 				} else {
-					blockFormation.moveOneTile(grid, Direction.DOWN); // the blockformation moves down one tile
+					currentBlockFormation.moveOneTile(Direction.DOWN); // the blockformation moves down one tile
 				}
 				count = 0;
 			}
@@ -99,9 +92,9 @@ public class Field extends JFrame implements KeyListener {
 		int gapSize = 0;
 		Collections.sort(removeIndex);
 
-		for (int k = 0; k < numberGroundBlocks; k++){
+		for (int groundBlockIndex = 0; groundBlockIndex < numberGroundBlocks; groundBlockIndex++){
 			if(!removeIndex.isEmpty()){
-				if(k == removeIndex.get(0)){
+				if(groundBlockIndex == removeIndex.get(0)){
 					groundBlocks.remove(gapSize);
 					removeIndex.remove(0);
 				} else{
@@ -112,9 +105,9 @@ public class Field extends JFrame implements KeyListener {
 		Collections.sort(groundBlocks, new CustomComparator());
 
 		// drop the groundblocks
-		for (int i = 0; i < grid.fullRows.size(); i++){
+		for (int fullRowIndex = 0; fullRowIndex < grid.fullRowIndices.size(); fullRowIndex++){
 			for (Block groundBlock: groundBlocks){
-				if (groundBlock.j < grid.fullRows.get(i)){
+				if (groundBlock.getj() < grid.fullRowIndices.get(fullRowIndex)){
 					groundBlock.drop(grid);
 				}
 			}
@@ -164,18 +157,17 @@ public class Field extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent event) {
 		int code = event.getKeyCode();
-		BlockFormation blockFormation = getCurrentBlockFormation();
 		if (code == KeyEvent.VK_DOWN) {
-			if (!blockFormation.IsBelowOccupied(grid)){
-				blockFormation.moveOneTile(grid,Direction.DOWN);
+			if (!currentBlockFormation.IsBelowOccupied()){
+				currentBlockFormation.moveOneTile(Direction.DOWN);
 			}
 		} else if (code == KeyEvent.VK_RIGHT) {
-			if (blockFormation.IsRightFree(grid)){
-				blockFormation.moveOneTile(grid, Direction.RIGHT);
+			if (currentBlockFormation.IsRightFree()){
+				currentBlockFormation.moveOneTile(Direction.RIGHT);
 			}
 		} else if (code == KeyEvent.VK_LEFT){
-			if (blockFormation.IsLeftFree(grid)){
-				blockFormation.moveOneTile(grid, Direction.LEFT);
+			if (currentBlockFormation.IsLeftFree()){
+				currentBlockFormation.moveOneTile(Direction.LEFT);
 			}
 		} else if (code == KeyEvent.VK_ESCAPE){
 			if (timer.isRunning()) {
@@ -184,7 +176,7 @@ public class Field extends JFrame implements KeyListener {
 				timer.start();
 			}
 		} else if (code == KeyEvent.VK_SPACE){
-			blockFormation.rotate_bl(grid);
+			currentBlockFormation.rotate_bl();
 		} else if (code == KeyEvent.VK_F){
 			if (dropPeriod > 1){
 				dropPeriod--;
@@ -217,14 +209,10 @@ public class Field extends JFrame implements KeyListener {
 		protected void paintComponent(Graphics graphics){
 			super.paintComponent(graphics);
 			Graphics2D g2d = (Graphics2D) graphics;
-			for(int i = 1; i< Grid.widthNumber +1; i++){
-				grid.setHoldsBlock(i, Grid.heightNumber +1, true);
-				for(int j = 1; j < Grid.heightNumber +1; j++){
-					grid.setHoldsBlock(Grid.widthNumber +1, j, true);
-					grid.setHoldsBlock(Grid.widthNumber +2, j, true);
-					grid.setHoldsBlock(0, j, true);
 
-					if (false) { // Makes background tiles red and green
+			for(int i = 1; i< Grid.widthNumber +1; i++){
+				for(int j = 1; j < Grid.heightNumber +1; j++){
+					if (true) { // Makes background tiles red and green
 						if (grid.getHoldsBlock(i, j)) { // red for occupied
 							g2d.setColor(grid.color_occupied);
 						} else { // green for free
@@ -237,15 +225,11 @@ public class Field extends JFrame implements KeyListener {
 				}
 			}
 
-			ArrayList<BlockFormation> blockFormations = getBlockFormationList();
-			if (!blockFormations.isEmpty()) {
-				BlockFormation blockFormation = getCurrentBlockFormation();
-				blockFormation.setCoordinates();
-				blockFormation.render(g2d);
-			}
+			currentBlockFormation.setCoordinates();
+			currentBlockFormation.render(g2d);
 
 			for (Block groundBlock : groundBlocks){
-				groundBlock.setPosition(groundBlock.i, groundBlock.j);
+				groundBlock.setPosition();
 				groundBlock.render(g2d);
 			}
 		}
@@ -256,18 +240,6 @@ public class Field extends JFrame implements KeyListener {
 		public int compare(Block block1, Block block2) {
 			return block2.getj().compareTo(block1.getj());
 		}
-	}
-
-	private void setBlockFormationList(ArrayList<BlockFormation> blockformations){
-		this.blockFormations = blockformations;
-	}
-
-	private ArrayList<BlockFormation> getBlockFormationList(){
-		return blockFormations;
-	}
-
-	private BlockFormation getCurrentBlockFormation() {
-		return getBlockFormationList().get(0);
 	}
 
 }

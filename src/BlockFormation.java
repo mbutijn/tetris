@@ -8,19 +8,22 @@ class BlockFormation extends ArrayList<Block> {
 	static BlockFormation blockFormation;
 	Color color;
 	private Sort type;
-	private List<Block> blockList;
-	int[] widthIndex, heightIndex;
+	private List<Block> blockList = new ArrayList<>();
+	int[] widthIndices, heightIndices;
 	int I_left, J_under;
 	static Orientation orientation;
+	private Grid grid;
 
 	BlockFormation(BlockFormation bf){
 		blockFormation = bf;
 	}
 
 	BlockFormation(int I_left, Sort type, Grid grid) {
-		blockList = new ArrayList<>();
 		this.I_left = I_left;
 		this.type = type;
+		orientation = Orientation.FIRST;
+		this.grid = grid;
+
 		if (type == Sort.ONE_BY_FOUR) {
 			new BlockFormation_1b4(this);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -37,16 +40,14 @@ class BlockFormation extends ArrayList<Block> {
 			new BlockFormation_J(this);
 		}
 
-		orientation = Orientation.FIRST;
-
 		for (int k = 0; k < 4; k++) {
-			Block block = new Block(widthIndex[k], heightIndex[k], color);
+			Block block = new Block(widthIndices[k], heightIndices[k], color);
 			blockList.add(block);
 			grid.setHoldsBlock(I_left + block.i, J_under + block.j, true);
 		}
 	}
 
-	boolean IsBelowOccupied(Grid grid) {
+	boolean IsBelowOccupied() {
 		if (type == Sort.ONE_BY_FOUR){
 			return BlockFormation_1b4.checkBelow(grid);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -64,7 +65,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	boolean IsRightFree(Grid grid) {
+	boolean IsRightFree() {
 		if (type == Sort.ONE_BY_FOUR) {
 			return BlockFormation_1b4.checkRight(grid);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -82,7 +83,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	boolean IsLeftFree(Grid grid) {
+	boolean IsLeftFree() {
 		if (type == Sort.ONE_BY_FOUR) {
 			return BlockFormation_1b4.checkLeft(grid);
 		} else if (type == Sort.TWO_BY_TWO) {
@@ -100,7 +101,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	void moveOneTile(Grid grid, Direction direction) {
+	void moveOneTile(Direction direction) {
 		changeBlockMatrix(grid, false);
 
 		if (direction == Direction.RIGHT) {
@@ -115,7 +116,7 @@ class BlockFormation extends ArrayList<Block> {
 
 	private void changeBlockMatrix(Grid grid, boolean occupied) {
 		for (Block block : blockList) {
-			grid.setHoldsBlock(I_left + widthIndex[blockList.indexOf(block)], J_under + heightIndex[blockList.indexOf(block)], occupied);
+			grid.setHoldsBlock(I_left + widthIndices[blockList.indexOf(block)], J_under + heightIndices[blockList.indexOf(block)], occupied);
 		}
 	}
 
@@ -129,7 +130,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	void rotate_bl(Grid grid) {
+	void rotate_bl() {
 		changeBlockMatrix(grid, false);
 
 		if (type == Sort.ONE_BY_FOUR) {
@@ -151,24 +152,24 @@ class BlockFormation extends ArrayList<Block> {
 
 	void setCoordinates() {
 		for (Block block : blockList) {
-			block.i = I_left + widthIndex[blockList.indexOf(block)];
-			block.j = J_under + heightIndex[blockList.indexOf(block)];
+			block.i = I_left + widthIndices[blockList.indexOf(block)];
+			block.j = J_under + heightIndices[blockList.indexOf(block)];
 		}
 	}
 
 	void render(Graphics graphics) {
 		for (Block block : blockList) {
-			block.setPosition(block.i, block.j);
+			block.setPosition();
 			block.render(graphics);
 		}
 	}
 
-	void setWidthIndex(int[] widthIndex) {
-		this.widthIndex = widthIndex;
+	void setWidthIndices(int[] widthIndices) {
+		this.widthIndices = widthIndices;
 	}
 
-	void setHeightIndex(int[] heightIndex) {
-		this.heightIndex = heightIndex;
+	void setHeightIndices(int[] heightIndices) {
+		this.heightIndices = heightIndices;
 	}
 
 }

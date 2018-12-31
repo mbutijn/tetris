@@ -12,11 +12,6 @@ public class Block {
 		this.color = color;
 	}
 
-	void setPosition(int i, int j) {
-		position.setX(i*Grid.getDimension()+Grid.getDistance());
-		position.setY(j*Grid.getDimension()+Grid.getDistance());
-	}
-
 	void drop(Grid grid){
 		grid.setHoldsBlock(i, j, false);
 		j++;
@@ -41,4 +36,8 @@ public class Block {
 		g2d.fillRect(position.getX(), position.getY(), Grid.getDimension()-4*Grid.getDistance(), Grid.getDimension()-4*Grid.getDistance());
 	}
 
+	void setPosition() {
+		position.setX(i*Grid.getDimension()+Grid.getDistance());
+		position.setY(j*Grid.getDimension()+Grid.getDistance());
+	}
 }

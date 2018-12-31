@@ -4,8 +4,8 @@ class BlockFormation_2b2 extends BlockFormation {
 
     BlockFormation_2b2(BlockFormation bf) {
         super(bf);
-        bf.widthIndex = new int[]{0, 1, 0, 1};
-        bf.heightIndex = new int[]{-1, -1, 0, 0};
+        bf.widthIndices = new int[]{0, 1, 0, 1};
+        bf.heightIndices = new int[]{-1, -1, 0, 0};
         bf.J_under = 2;
         bf.color = new Color(240, 240, 10);
     }

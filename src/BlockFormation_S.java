@@ -3,8 +3,8 @@ import java.awt.*;
 class BlockFormation_S extends BlockFormation{
     BlockFormation_S(BlockFormation bf) {
         super(bf);
-        bf.widthIndex = new int[]{0, 1, 1, 2};
-        bf.heightIndex = new int[]{0, 0, -1, -1};
+        bf.widthIndices = new int[]{0, 1, 1, 2};
+        bf.heightIndices = new int[]{0, 0, -1, -1};
         bf.J_under = 2;
         bf.color = new Color(230, 20, 20);
     }
@@ -34,13 +34,13 @@ class BlockFormation_S extends BlockFormation{
     }
     static void rotate(Grid grid) {
         if (orientation == Orientation.FIRST) {
-            blockFormation.widthIndex = new int[]{0, 0, 1, 1};
-            blockFormation.heightIndex = new int[]{-2, -1, -1, 0};
+            blockFormation.widthIndices = new int[]{0, 0, 1, 1};
+            blockFormation.heightIndices = new int[]{-2, -1, -1, 0};
             orientation = Orientation.SECOND;
         } else if (orientation == Orientation.SECOND) {
             if (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 1)) {
-                blockFormation.widthIndex = new int[]{0, 1, 1, 2};
-                blockFormation.heightIndex = new int[]{0, 0, -1, -1};
+                blockFormation.widthIndices = new int[]{0, 1, 1, 2};
+                blockFormation.heightIndices = new int[]{0, 0, -1, -1};
                 orientation = Orientation.FIRST;
             }
         }

@@ -8,7 +8,7 @@ public class Grid {
 	Color color_free = new Color(50, 200, 50);
 	private static int dimension, distance;
 	static int widthNumber, heightNumber;
-	ArrayList<Integer> fullRows = new ArrayList<>();
+	ArrayList<Integer> fullRowIndices = new ArrayList<>();
 	private boolean [][] blockMatrix;
 
 	Grid(int dimension, int distance, int widthNumber, int heightNumber){
@@ -17,17 +17,27 @@ public class Grid {
 		Grid.widthNumber = widthNumber;
 		Grid.heightNumber = heightNumber;
 		blockMatrix = new boolean[heightNumber+2][widthNumber+3];
+
+		for(int row = 1; row < Grid.heightNumber +1; row++) {
+			setHoldsBlock(Grid.widthNumber + 1, row, true);
+			setHoldsBlock(Grid.widthNumber + 2, row, true);
+			setHoldsBlock(0, row, true);
+		}
+
+		for(int collumn = 1; collumn < Grid.widthNumber + 1; collumn++) {
+			setHoldsBlock(collumn, Grid.heightNumber + 1, true);
+		}
 	}
 
 	void makeFullRows(Field field) {
-		fullRows.clear();
+		fullRowIndices.clear();
 		for(int j = 0; j < heightNumber +1; j++){
 			if(checkLineFull(j)){
-				fullRows.add(j);
+				fullRowIndices.add(j);
 			}
 		}
 
-		removeLines(fullRows, field);
+		removeLines(fullRowIndices, field);
 	}
 
 	private boolean checkLineFull(int j){

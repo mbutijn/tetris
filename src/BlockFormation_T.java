@@ -3,8 +3,8 @@ import java.awt.*;
 class BlockFormation_T extends BlockFormation{
     BlockFormation_T(BlockFormation bf) {
         super(bf);
-        bf.widthIndex = new int[]{0, 1, 1, 2};
-        bf.heightIndex = new int[]{0, 0, -1, 0};
+        bf.widthIndices = new int[]{0, 1, 1, 2};
+        bf.heightIndices = new int[]{0, 0, -1, 0};
         bf.J_under = 2;
         bf.color = new Color(200, 0, 200);
     }
@@ -47,23 +47,23 @@ class BlockFormation_T extends BlockFormation{
 
     static void rotate(Grid grid) {
         if (orientation == Orientation.FIRST) {
-            blockFormation.widthIndex = new int[]{1, 1, 0, 1};
-            blockFormation.heightIndex = new int[]{-2, -1, -1, 0};
+            blockFormation.widthIndices = new int[]{1, 1, 0, 1};
+            blockFormation.heightIndices = new int[]{-2, -1, -1, 0};
             orientation = Orientation.SECOND;
         } else if (orientation == Orientation.SECOND) {
             if (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 1)) {
-                blockFormation.widthIndex = new int[]{0, 1, 1, 2};
-                blockFormation.heightIndex = new int[]{-1, -1, 0, -1};
+                blockFormation.widthIndices = new int[]{0, 1, 1, 2};
+                blockFormation.heightIndices = new int[]{-1, -1, 0, -1};
                 orientation = Orientation.THIRD;
             }
         } else if (orientation == Orientation.THIRD) {
-            blockFormation.widthIndex = new int[]{0, 0, 1, 0};
-            blockFormation.heightIndex = new int[]{-2, -1, -1, 0};
+            blockFormation.widthIndices = new int[]{0, 0, 1, 0};
+            blockFormation.heightIndices = new int[]{-2, -1, -1, 0};
             orientation = Orientation.FOURTH;
         } else if (orientation == Orientation.FOURTH) {
             if (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 1)) {
-                blockFormation.widthIndex = new int[]{0, 1, 1, 2};
-                blockFormation.heightIndex = new int[]{0, 0, -1, 0};
+                blockFormation.widthIndices = new int[]{0, 1, 1, 2};
+                blockFormation.heightIndices = new int[]{0, 0, -1, 0};
                 orientation = Orientation.FIRST;
             }
         }
