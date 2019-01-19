@@ -16,9 +16,9 @@ public class Grid {
 		Grid.distance = distance;
 		Grid.widthNumber = widthNumber;
 		Grid.heightNumber = heightNumber;
-		blockMatrix = new boolean[heightNumber+2][widthNumber+3];
+		blockMatrix = new boolean[heightNumber + 2][widthNumber + 3];
 
-		for(int row = 1; row < Grid.heightNumber +1; row++) {
+		for(int row = 1; row < Grid.heightNumber + 1; row++) {
 			setHoldsBlock(Grid.widthNumber + 1, row, true);
 			setHoldsBlock(Grid.widthNumber + 2, row, true);
 			setHoldsBlock(0, row, true);
@@ -29,34 +29,31 @@ public class Grid {
 		}
 	}
 
-	void makeFullRows(Field field) {
+	void updateFullRowIndices() {
 		fullRowIndices.clear();
-		for(int j = 0; j < heightNumber +1; j++){
-			if(checkLineFull(j)){
-				fullRowIndices.add(j);
+		for(int rowIndex = 0; rowIndex < heightNumber + 1; rowIndex++){
+			if(checkLineFull(rowIndex)){
+				fullRowIndices.add(rowIndex);
 			}
 		}
-
-		removeLines(fullRowIndices, field);
 	}
 
-	private boolean checkLineFull(int j){
-		for (boolean b: blockMatrix[j])
+	private boolean checkLineFull(int row){
+		for (boolean b: blockMatrix[row])
 			if (!b) return false;
 		return true;
 	}
 
-	private void removeLines(ArrayList<Integer> fullRows, Field field) {
-		field.removeIndex.clear();
-		for(int rowNumber : fullRows){
+	void removeLines(Field field) {
+		field.removeIndices.clear();
+		for(int rowNumber : fullRowIndices){
 			for(Block groundBlock : field.groundBlocks){
-				if(groundBlock.j == rowNumber){
-					this.setHoldsBlock(groundBlock.i, groundBlock.j, false);
-					field.removeIndex.add(field.groundBlocks.indexOf(groundBlock));
+				if(groundBlock.getj() == rowNumber){
+					setHoldsBlock(groundBlock.geti(), groundBlock.getj(), false);
+					field.removeIndices.add(field.groundBlocks.indexOf(groundBlock));
 				}
 			}
 		}
-		field.updateScore(fullRows.size());
 	}
 
 	void setHoldsBlock(int i, int j, boolean occupied){

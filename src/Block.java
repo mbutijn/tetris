@@ -1,8 +1,8 @@
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class Block {
-	int i,j;
+class Block {
+	private int i,j;
 	private Position position = new Position();
 	private Color color;
 
@@ -25,27 +25,27 @@ public class Block {
 
 		Point2D center = new Point2D.Float(position.getX(), position.getY());
 		g2d.setPaint(new RadialGradientPaint(center, (float) (1.2*Grid.getDimension()), contour, colors));
-		g2d.fillRect(position.getX(), position.getY(), Grid.getDimension()-4*Grid.getDistance(), Grid.getDimension()-4*Grid.getDistance());
+		g2d.fillRect(position.getX(), position.getY(), Grid.getDimension() - 4*Grid.getDistance(), Grid.getDimension() - 4*Grid.getDistance());
 	}
 
-	void setPosition() {
-		position.setX(i*Grid.getDimension()+Grid.getDistance());
-		position.setY(j*Grid.getDimension()+Grid.getDistance());
+	void updatePosition() {
+		position.setX(i*Grid.getDimension() + Grid.getDistance());
+		position.setY(j*Grid.getDimension() + Grid.getDistance());
 	}
 
-	Integer getJ() {
+	Integer getj() {
 		return this.j;
 	}
 
-	public Integer getI() {
+	Integer geti() {
 		return this.i;
 	}
 
-	void setI(int i){
+	void seti(int i){
 		this.i = i;
 	}
 
-	void setJ(int j){
+	void setj(int j){
 		this.j = j;
 	}
 }

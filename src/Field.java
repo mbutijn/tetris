@@ -14,7 +14,7 @@ public class Field extends JFrame implements KeyListener {
 	private GreyBoxes greyBoxes = new GreyBoxes();
 	private BlockFormation currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 	ArrayList<Block> groundBlocks = new ArrayList<>();
-	ArrayList<Integer> removeIndex = new ArrayList<>();
+	ArrayList<Integer> removeIndices = new ArrayList<>();
 	private Timer timer;
 	int points;
 	private JTextField scoreField = new JTextField("0", 4);
@@ -71,13 +71,18 @@ public class Field extends JFrame implements KeyListener {
 				if (currentBlockFormation.IsBelowOccupied()){ // blockformation can not move down anymore
 					// move the blocks from the current blockformation to layDownBlocks
 					currentBlockFormation.layDownBlocks(Field.this);
-					grid.makeFullRows(Field.this);
-					if(!removeIndex.isEmpty()){
+
+					grid.updateFullRowIndices();
+					grid.removeLines(Field.this);
+					updateScore(grid.fullRowIndices.size()); // update the score for the player
+
+					if(!removeIndices.isEmpty()){
 						removeEveryBlock();
+						dropGroundBlocks();
 					}
 
-					// overwrite "blockformation" with a new instance
-					currentBlockFormation = new BlockFormation((int) Math.round(1+Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
+					// overwrite "currentBlockFormation" with a new instance
+					currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
 				} else {
 					currentBlockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
 				}
@@ -86,27 +91,28 @@ public class Field extends JFrame implements KeyListener {
 		}
 	};
 
-	private void removeEveryBlock(){
+	private void removeEveryBlock() {
 		int numberGroundBlocks = groundBlocks.size();
 		int gapSize = 0;
-		Collections.sort(removeIndex);
+		Collections.sort(removeIndices);
 
-		for (int groundBlockIndex = 0; groundBlockIndex < numberGroundBlocks; groundBlockIndex++){
-			if(!removeIndex.isEmpty()){
-				if(groundBlockIndex == removeIndex.get(0)){
+		for (int groundBlockIndex = 0; groundBlockIndex < numberGroundBlocks; groundBlockIndex++) {
+			if (!removeIndices.isEmpty()) {
+				if (groundBlockIndex == removeIndices.get(0)) {
 					groundBlocks.remove(gapSize);
-					removeIndex.remove(0);
-				} else{
+					removeIndices.remove(0);
+				} else {
 					gapSize++;
 				}
 			}
 		}
 		Collections.sort(groundBlocks, new CustomComparator());
+	}
 
-		// drop the groundblocks
+	private void dropGroundBlocks() {
 		for (int fullRowIndex = 0; fullRowIndex < grid.fullRowIndices.size(); fullRowIndex++){
-			for (Block groundBlock: groundBlocks){
-				if (groundBlock.getJ() < grid.fullRowIndices.get(fullRowIndex)){
+			for (Block groundBlock : groundBlocks){
+				if (groundBlock.getj() < grid.fullRowIndices.get(fullRowIndex)){
 					groundBlock.drop(grid);
 				}
 			}
@@ -139,7 +145,7 @@ public class Field extends JFrame implements KeyListener {
 		addKeyListener(this);
 	}
 
-	void updateScore(int rowsCleared) {
+	private void updateScore(int rowsCleared) {
 		if (rowsCleared == 1) {
 			points += 50;
 		} else if (rowsCleared == 2){
@@ -209,8 +215,8 @@ public class Field extends JFrame implements KeyListener {
 			super.paintComponent(graphics);
 			Graphics2D g2d = (Graphics2D) graphics;
 
-			for(int i = 1; i< Grid.widthNumber +1; i++){
-				for(int j = 1; j < Grid.heightNumber +1; j++){
+			for(int i = 1; i< Grid.widthNumber + 1; i++){
+				for(int j = 1; j < Grid.heightNumber + 1; j++){
 					if (false) { // Makes background tiles red and green
 						if (grid.getHoldsBlock(i, j)) { // red for occupied
 							g2d.setColor(grid.color_occupied);
@@ -220,7 +226,7 @@ public class Field extends JFrame implements KeyListener {
 					} else { // Makes all background tiles grey
 						g2d.setColor(grid.color);
 					}
-					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension()-2*Grid.getDistance(), Grid.getDimension()-2*Grid.getDistance());
+					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension() - 2*Grid.getDistance(), Grid.getDimension() - 2*Grid.getDistance());
 				}
 			}
 
@@ -228,7 +234,7 @@ public class Field extends JFrame implements KeyListener {
 			currentBlockFormation.render(g2d);
 
 			for (Block groundBlock : groundBlocks){
-				groundBlock.setPosition();
+				groundBlock.updatePosition();
 				groundBlock.render(g2d);
 			}
 		}
@@ -237,7 +243,7 @@ public class Field extends JFrame implements KeyListener {
 	public class CustomComparator implements Comparator<Block> {
 		@Override
 		public int compare(Block block1, Block block2) {
-			return block2.getJ().compareTo(block1.getJ());
+			return block2.getj().compareTo(block1.getj());
 		}
 	}
 

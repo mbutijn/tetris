@@ -43,7 +43,7 @@ class BlockFormation extends ArrayList<Block> {
 		for (int k = 0; k < 4; k++) {
 			Block block = new Block(widthIndices[k], heightIndices[k], color);
 			blockList.add(block);
-			grid.setHoldsBlock(I_left + block.i, J_under + block.j, true);
+			grid.setHoldsBlock(I_left + block.geti(), J_under + block.getj(), true);
 		}
 	}
 
@@ -102,7 +102,7 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	void moveOneTile(Direction direction) {
-		changeBlockMatrix(grid, false);
+		updateBlockMatrix(grid, false);
 
 		if (direction == Direction.RIGHT) {
 			I_left++;
@@ -111,10 +111,10 @@ class BlockFormation extends ArrayList<Block> {
 		} else if (direction == Direction.DOWN) {
 			J_under++;
 		}
-		changeBlockMatrix(grid, true);
+		updateBlockMatrix(grid, true);
 	}
 
-	private void changeBlockMatrix(Grid grid, boolean occupied) {
+	private void updateBlockMatrix(Grid grid, boolean occupied) {
 		for (Block block : blockList) {
 			grid.setHoldsBlock(I_left + widthIndices[blockList.indexOf(block)], J_under + heightIndices[blockList.indexOf(block)], occupied);
 		}
@@ -123,7 +123,7 @@ class BlockFormation extends ArrayList<Block> {
 	void layDownBlocks(Field field) {
 		for (Block block : blockList) {
 			field.groundBlocks.add(block);
-			if (block.j == 1) {
+			if (block.getj() == 1) {
 				field.stopGame();
 				break;
 			}
@@ -131,7 +131,7 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	void rotate_bl() {
-		changeBlockMatrix(grid, false);
+		updateBlockMatrix(grid, false);
 
 		if (type == Sort.ONE_BY_FOUR) {
 			orientation = BlockFormation_1b4.rotate(grid, orientation);
@@ -147,19 +147,19 @@ class BlockFormation extends ArrayList<Block> {
 			orientation = BlockFormation_J.rotate(grid, orientation);
 		}
 
-		changeBlockMatrix(grid, true);
+		updateBlockMatrix(grid, true);
 	}
 
 	void setCoordinates() {
 		for (Block block : blockList) {
-			block.setI(I_left + widthIndices[blockList.indexOf(block)]);
-			block.setJ(J_under + heightIndices[blockList.indexOf(block)]);
+			block.seti(I_left + widthIndices[blockList.indexOf(block)]);
+			block.setj(J_under + heightIndices[blockList.indexOf(block)]);
 		}
 	}
 
 	void render(Graphics graphics) {
 		for (Block block : blockList) {
-			block.setPosition();
+			block.updatePosition();
 			block.render(graphics);
 		}
 	}
