@@ -5,41 +5,21 @@ import java.util.List;
 class BlockFormation extends ArrayList<Block> {
 
 	private static final long serialVersionUID = 1L;
-	static BlockFormation blockFormation;
-	Color color;
-	private Sort type;
 	private List<Block> blockList = new ArrayList<>();
-	int[] widthIndices, heightIndices;
-	int I_left, J_under;
 	private Orientation orientation;
 	private Grid grid;
+	int[] widthIndices, heightIndices;
+	int I_left, J_under;
+	Sort type;
+	Color color;
 
-	BlockFormation(BlockFormation bf){
-		blockFormation = bf;
+	BlockFormation(Grid grid){
+		this.I_left = (int) Math.round(1 + Math.random()*(Grid.widthNumber - 5));
+		this.orientation = Orientation.FIRST;
+		this.grid = grid;
 	}
 
-	BlockFormation(int I_left, Sort type, Grid grid) {
-		this.I_left = I_left;
-		this.type = type;
-		orientation = Orientation.FIRST;
-		this.grid = grid;
-
-		if (type == Sort.ONE_BY_FOUR) {
-			new BlockFormation_1b4(this);
-		} else if (type == Sort.TWO_BY_TWO) {
-			new BlockFormation_2b2(this);
-		} else if (type == Sort.L) {
-			new BlockFormation_L(this);
-		} else if (type == Sort.T) {
-			new BlockFormation_T(this);
-		} else if (type == Sort.S) {
-			new BlockFormation_S(this);
-		} else if (type == Sort.Z) {
-			new BlockFormation_Z(this);
-		} else {
-			new BlockFormation_J(this);
-		}
-
+	void makeBlockList(Grid grid){
 		for (int k = 0; k < 4; k++) {
 			Block block = new Block(widthIndices[k], heightIndices[k], color);
 			blockList.add(block);
@@ -49,55 +29,76 @@ class BlockFormation extends ArrayList<Block> {
 
 	boolean IsBelowOccupied() {
 		if (type == Sort.ONE_BY_FOUR){
-			return BlockFormation_1b4.checkBelow(grid, orientation);
+			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
+			return bf.checkBelow(grid, orientation);
 		} else if (type == Sort.TWO_BY_TWO) {
-			return BlockFormation_2b2.checkBelow(grid);
+			BlockFormation_2b2 bf = (BlockFormation_2b2) this;
+			return bf.checkBelow(grid);
 		} else if (type == Sort.L){
-			return BlockFormation_L.checkBelow(grid, orientation);
+			BlockFormation_L bf = (BlockFormation_L) this;
+			return bf.checkBelow(grid, orientation);
 		} else if (type == Sort.T) {
-			return BlockFormation_T.checkBelow(grid, orientation);
+			BlockFormation_T bf = (BlockFormation_T) this;
+			return bf.checkBelow(grid, orientation);
 		}  else if (type == Sort.S) {
-			return BlockFormation_S.checkBelow(grid, orientation);
+			BlockFormation_S bf = (BlockFormation_S) this;
+			return bf.checkBelow(grid, orientation);
 		} else if (type == Sort.Z) {
-			return BlockFormation_Z.checkBelow(grid, orientation);
+			BlockFormation_Z bf = (BlockFormation_Z) this;
+			return bf.checkBelow(grid, orientation);
 		} else {
-			return BlockFormation_J.checkBelow(grid, orientation);
+			BlockFormation_J bf = (BlockFormation_J) this;
+			return bf.checkBelow(grid, orientation);
 		}
 	}
 
 	boolean IsRightFree() {
 		if (type == Sort.ONE_BY_FOUR) {
-			return BlockFormation_1b4.checkRight(grid, orientation);
+			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
+			return bf.checkRight(grid, orientation);
 		} else if (type == Sort.TWO_BY_TWO) {
-			return BlockFormation_2b2.checkRight(grid);
+			BlockFormation_2b2 bf = (BlockFormation_2b2) this;
+			return bf.checkRight(grid);
 		} else if (type == Sort.L) {
-			return BlockFormation_L.checkRight(grid, orientation);
+			BlockFormation_L bf = (BlockFormation_L) this;
+			return bf.checkRight(grid, orientation);
 		} else if (type == Sort.T){
-			return BlockFormation_T.checkRight(grid, orientation);
+			BlockFormation_T bf = (BlockFormation_T) this;
+			return bf.checkRight(grid, orientation);
 		} else if (type == Sort.S) {
-			return BlockFormation_S.checkRight(grid, orientation);
+			BlockFormation_S bf = (BlockFormation_S) this;
+			return bf.checkRight(grid, orientation);
 		} else if (type == Sort.Z) {
-			return BlockFormation_Z.checkRight(grid, orientation);
+			BlockFormation_Z bf = (BlockFormation_Z) this;
+			return bf.checkRight(grid, orientation);
 		} else {
-			return BlockFormation_J.checkRight(grid, orientation);
+			BlockFormation_J bf = (BlockFormation_J) this;
+			return bf.checkRight(grid, orientation);
 		}
 	}
 
 	boolean IsLeftFree() {
 		if (type == Sort.ONE_BY_FOUR) {
-			return BlockFormation_1b4.checkLeft(grid, orientation);
+			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
+			return bf.checkLeft(grid, orientation);
 		} else if (type == Sort.TWO_BY_TWO) {
-			return BlockFormation_2b2.checkLeft(grid);
+			BlockFormation_2b2 bf = (BlockFormation_2b2) this;
+			return bf.checkLeft(grid);
 		} else if (type == Sort.L) {
-			return BlockFormation_L.checkLeft(grid, orientation);
+			BlockFormation_L bf = (BlockFormation_L) this;
+			return bf.checkLeft(grid, orientation);
 		} else if (type == Sort.T){
-			return BlockFormation_T.checkLeft(grid, orientation);
+			BlockFormation_T bf = (BlockFormation_T) this;
+			return bf.checkLeft(grid, orientation);
 		} else if (type == Sort.S) {
-			return BlockFormation_S.checkLeft(grid, orientation);
+			BlockFormation_S bf = (BlockFormation_S) this;
+			return bf.checkLeft(grid, orientation);
 		} else if (type == Sort.Z) {
-			return BlockFormation_Z.checkLeft(grid, orientation);
+			BlockFormation_Z bf = (BlockFormation_Z) this;
+			return bf.checkLeft(grid, orientation);
 		} else {
-			return BlockFormation_J.checkLeft(grid, orientation);
+			BlockFormation_J bf = (BlockFormation_J) this;
+			return bf.checkLeft(grid, orientation);
 		}
 	}
 
@@ -134,17 +135,23 @@ class BlockFormation extends ArrayList<Block> {
 		updateBlockMatrix(grid, false);
 
 		if (type == Sort.ONE_BY_FOUR) {
-			orientation = BlockFormation_1b4.rotate(grid, orientation);
+			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
+			orientation = bf.rotate(grid, orientation);
 		} else if (type == Sort.L) {
-			orientation = BlockFormation_L.rotate(grid, orientation);
+			BlockFormation_L bf = (BlockFormation_L) this;
+			orientation = bf.rotate(grid, orientation);
 		} else if (type == Sort.T) {
-			orientation = BlockFormation_T.rotate(grid, orientation);
+			BlockFormation_T bf = (BlockFormation_T) this;
+			orientation = bf.rotate(grid, orientation);
 		} else if (type == Sort.S) {
-			orientation = BlockFormation_S.rotate(grid, orientation);
+			BlockFormation_S bf = (BlockFormation_S) this;
+			orientation = bf.rotate(grid, orientation);
 		} else if (type == Sort.Z) {
-			orientation = BlockFormation_Z.rotate(grid, orientation);
+			BlockFormation_Z bf = (BlockFormation_Z) this;
+			orientation = bf.rotate(grid, orientation);
 		} else if (type == Sort.J) {
-			orientation = BlockFormation_J.rotate(grid, orientation);
+			BlockFormation_J bf = (BlockFormation_J) this;
+			orientation = bf.rotate(grid, orientation);
 		}
 
 		updateBlockMatrix(grid, true);

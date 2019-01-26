@@ -9,18 +9,17 @@ import java.util.Comparator;
 
 public class Field extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
-
 	private Grid grid = new Grid(30, 2, 13, 21);
 	private GreyBoxes greyBoxes = new GreyBoxes();
-	private BlockFormation currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
-	ArrayList<Block> groundBlocks = new ArrayList<>();
-	ArrayList<Integer> removeIndices = new ArrayList<>();
+	private BlockFormation blockFormation = makeNewBlockFormation(grid);
 	private Timer timer;
-	int points;
 	private JTextField scoreField = new JTextField("0", 4);
-	JTextArea highscore = new JTextArea("0", 0, 0);
 	private final int TIMER_PERIOD = 25; // ms
 	private int dropPeriod = 10;
+	int points;
+	ArrayList<Block> groundBlocks = new ArrayList<>();
+	ArrayList<Integer> removeIndices = new ArrayList<>();
+	JTextArea highscore = new JTextArea("0", 0, 0);
 
 	Field(){
 		setContentPane(greyBoxes);
@@ -68,9 +67,9 @@ public class Field extends JFrame implements KeyListener {
 			greyBoxes.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
 
 			if (count >= dropPeriod){ // normally runs every 250 miliseconds
-				if (currentBlockFormation.IsBelowOccupied()){ // blockformation can not move down anymore
+				if (blockFormation.IsBelowOccupied()){ // blockformation can not move down anymore
 					// move the blocks from the current blockformation to layDownBlocks
-					currentBlockFormation.layDownBlocks(Field.this);
+					blockFormation.layDownBlocks(Field.this);
 
 					grid.updateFullRowIndices();
 					grid.removeLines(Field.this);
@@ -81,15 +80,39 @@ public class Field extends JFrame implements KeyListener {
 						dropGroundBlocks();
 					}
 
-					// overwrite "currentBlockFormation" with a new instance
-					currentBlockFormation = new BlockFormation((int) Math.round(1 + Math.random()*(Grid.widthNumber - 5)), selectType(), grid);
+					// overwrite "blockFormation" with a new instance
+					blockFormation = makeNewBlockFormation(grid);
 				} else {
-					currentBlockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
+					blockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
 				}
 				count = 0;
 			}
 		}
 	};
+
+	private BlockFormation makeNewBlockFormation(Grid grid){
+		BlockFormation blockFormation;
+		double select = Math.random();
+		if(select < 1.0/7.0){
+			blockFormation = new BlockFormation_1b4(grid);
+		} else if(select < 2.0/7.0){
+			blockFormation = new BlockFormation_2b2(grid);
+		} else if(select < 3.0/7.0){
+			blockFormation = new BlockFormation_L(grid);
+		} else if(select < 4.0/7.0){
+			blockFormation = new BlockFormation_T(grid);
+		} else if(select < 5.0/7.0){
+			blockFormation = new BlockFormation_S(grid);
+		} else if(select < 6.0/7.0){
+			blockFormation = new BlockFormation_Z(grid);
+		} else {
+			blockFormation = new BlockFormation_J(grid);
+		}
+
+		blockFormation.makeBlockList(grid);
+
+		return blockFormation;
+	}
 
 	private void removeEveryBlock() {
 		int numberGroundBlocks = groundBlocks.size();
@@ -119,26 +142,6 @@ public class Field extends JFrame implements KeyListener {
 		}
 	}
 
-	private Sort selectType() {
-		double select = Math.random();
-		if(select < 1.0/7.0){
-			return Sort.ONE_BY_FOUR;
-		} else if (select < 2.0/7.0){
-			return Sort.TWO_BY_TWO;
-		} else if (select < 3.0/7.0){
-			return Sort.L;
-		} else if (select < 4.0/7.0){
-			return Sort.T;
-		} else if (select < 5.0/7.0){
-			return Sort.S;
-		} else if (select < 6.0/7.0){
-			return Sort.Z;
-		} else {
-			return Sort.J;
-		}
-//		return Sort.Z;
-	}
-
 	private void setKeyBoardListeners() {
 		setFocusable(true);
 		requestFocusInWindow();
@@ -161,39 +164,39 @@ public class Field extends JFrame implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		int code = event.getKeyCode();
-		if (code == KeyEvent.VK_DOWN) {
-			if (!currentBlockFormation.IsBelowOccupied()){
-				currentBlockFormation.moveOneTile(Direction.DOWN);
-			}
-		} else if (code == KeyEvent.VK_RIGHT) {
-			if (currentBlockFormation.IsRightFree()){
-				currentBlockFormation.moveOneTile(Direction.RIGHT);
-			}
-		} else if (code == KeyEvent.VK_LEFT){
-			if (currentBlockFormation.IsLeftFree()){
-				currentBlockFormation.moveOneTile(Direction.LEFT);
-			}
-		} else if (code == KeyEvent.VK_ESCAPE){
-			if (timer.isRunning()) {
-				timer.stop();
-			} else {
-				timer.start();
-			}
-		} else if (code == KeyEvent.VK_SPACE){
-			currentBlockFormation.rotate_bl();
-		} else if (code == KeyEvent.VK_F){
-			if (dropPeriod > 1){
-				dropPeriod--;
-				System.out.println("BlockFormation drops every " + dropPeriod * TIMER_PERIOD + " ms");
-			} else {
-				System.out.println("Maximum speed (" + TIMER_PERIOD + " ms)");
-			}
-		} else if (code == KeyEvent.VK_S){
-			dropPeriod++;
-			System.out.println("BlockFormation drops every " + dropPeriod * TIMER_PERIOD + " ms");
-		}
-	}
+        int code = event.getKeyCode();
+        if (code == KeyEvent.VK_DOWN) {
+            if (!blockFormation.IsBelowOccupied()){
+                blockFormation.moveOneTile(Direction.DOWN);
+            }
+        } else if (code == KeyEvent.VK_RIGHT) {
+            if (blockFormation.IsRightFree()){
+                blockFormation.moveOneTile(Direction.RIGHT);
+            }
+        } else if (code == KeyEvent.VK_LEFT){
+            if (blockFormation.IsLeftFree()){
+                blockFormation.moveOneTile(Direction.LEFT);
+            }
+        } else if (code == KeyEvent.VK_ESCAPE){
+            if (timer.isRunning()) {
+                timer.stop();
+            } else {
+                timer.start();
+            }
+        } else if (code == KeyEvent.VK_SPACE){
+            blockFormation.rotate_bl();
+        } else if (code == KeyEvent.VK_F){
+            if (dropPeriod > 1){
+                dropPeriod--;
+                System.out.println("BlockFormation drops every " + dropPeriod * TIMER_PERIOD + " ms");
+            } else {
+                System.out.println("Maximum speed (" + TIMER_PERIOD + " ms)");
+            }
+        } else if (code == KeyEvent.VK_S){
+            dropPeriod++;
+            System.out.println("BlockFormation drops every " + dropPeriod * TIMER_PERIOD + " ms");
+        }
+    }
 
 	@Override
 	public void keyReleased(KeyEvent e) {}
@@ -226,12 +229,12 @@ public class Field extends JFrame implements KeyListener {
 					} else { // Makes all background tiles grey
 						g2d.setColor(grid.color);
 					}
-					g2d.fillRect(i*Grid.getDimension(), j*Grid.getDimension(), Grid.getDimension() - 2*Grid.getDistance(), Grid.getDimension() - 2*Grid.getDistance());
+					g2d.fillRect(i*Grid.getEdgeLength(), j*Grid.getEdgeLength(), Grid.getEdgeLength() - 2*Grid.getSpacing(), Grid.getEdgeLength() - 2*Grid.getSpacing());
 				}
 			}
 
-			currentBlockFormation.setCoordinates();
-			currentBlockFormation.render(g2d);
+			blockFormation.setCoordinates();
+			blockFormation.render(g2d);
 
 			for (Block groundBlock : groundBlocks){
 				groundBlock.updatePosition();

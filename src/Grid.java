@@ -6,14 +6,14 @@ public class Grid {
 	Color color = new Color(180, 180, 180);
 	Color color_occupied = new Color(200, 50, 50);
 	Color color_free = new Color(50, 200, 50);
-	private static int dimension, distance;
+	private static int edgeLength, spacing;
 	static int widthNumber, heightNumber;
 	ArrayList<Integer> fullRowIndices = new ArrayList<>();
 	private boolean [][] blockMatrix;
 
-	Grid(int dimension, int distance, int widthNumber, int heightNumber){
-		Grid.dimension = dimension;
-		Grid.distance = distance;
+	Grid(int edgeLength, int spacing, int widthNumber, int heightNumber){
+		Grid.edgeLength = edgeLength;
+		Grid.spacing = spacing;
 		Grid.widthNumber = widthNumber;
 		Grid.heightNumber = heightNumber;
 		blockMatrix = new boolean[heightNumber + 2][widthNumber + 3];
@@ -68,12 +68,12 @@ public class Grid {
 		blockMatrix[j][i] ^= true;
 	}
 
-	static int getDimension() {
-		return dimension;
+	static int getEdgeLength() {
+		return edgeLength;
 	}
 
-	static int getDistance() {
-		return distance;
+	static int getSpacing() {
+		return spacing;
 	}
 
 }

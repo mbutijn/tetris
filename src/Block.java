@@ -24,13 +24,13 @@ class Block {
 		Graphics2D g2d = (Graphics2D) graphics;
 
 		Point2D center = new Point2D.Float(position.getX(), position.getY());
-		g2d.setPaint(new RadialGradientPaint(center, (float) (1.2*Grid.getDimension()), contour, colors));
-		g2d.fillRect(position.getX(), position.getY(), Grid.getDimension() - 4*Grid.getDistance(), Grid.getDimension() - 4*Grid.getDistance());
+		g2d.setPaint(new RadialGradientPaint(center, (float) (1.2*Grid.getEdgeLength()), contour, colors));
+		g2d.fillRect(position.getX(), position.getY(), Grid.getEdgeLength() - 4*Grid.getSpacing(), Grid.getEdgeLength() - 4*Grid.getSpacing());
 	}
 
 	void updatePosition() {
-		position.setX(i*Grid.getDimension() + Grid.getDistance());
-		position.setY(j*Grid.getDimension() + Grid.getDistance());
+		position.setX(i*Grid.getEdgeLength() + Grid.getSpacing());
+		position.setY(j*Grid.getEdgeLength() + Grid.getSpacing());
 	}
 
 	Integer getj() {

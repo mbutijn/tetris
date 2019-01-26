@@ -2,23 +2,24 @@ import java.awt.*;
 
 class BlockFormation_2b2 extends BlockFormation {
 
-    BlockFormation_2b2(BlockFormation bf) {
-        super(bf);
-        bf.widthIndices = new int[]{0, 1, 0, 1};
-        bf.heightIndices = new int[]{-1, -1, 0, 0};
-        bf.J_under = 2;
-        bf.color = new Color(240, 240, 10);
+    BlockFormation_2b2(Grid grid) {
+        super(grid);
+        setWidthIndices(new int[]{0, 1, 0, 1});
+        setHeightIndices(new int[]{-1, -1, 0, 0});
+        J_under = 2;
+        color = new Color(240, 240, 10);
+        type = Sort.TWO_BY_TWO;
     }
 
-    static boolean checkBelow(Grid grid) {
-        return (grid.getHoldsBlock(blockFormation.I_left, blockFormation.J_under + 1) || grid.getHoldsBlock(blockFormation.I_left + 1, blockFormation.J_under + 1));
+    boolean checkBelow(Grid grid) {
+        return (grid.getHoldsBlock(I_left, J_under + 1) || grid.getHoldsBlock(I_left + 1, J_under + 1));
     }
 
-    static boolean checkRight(Grid grid) {
-        return (!grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left + 2, blockFormation.J_under - 1));
+    boolean checkRight(Grid grid) {
+        return (!grid.getHoldsBlock(I_left + 2, J_under) && !grid.getHoldsBlock(I_left + 2, J_under - 1));
     }
 
-    static boolean checkLeft(Grid grid) {
-        return (!grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under) && !grid.getHoldsBlock(blockFormation.I_left - 1, blockFormation.J_under - 1));
+    boolean checkLeft(Grid grid) {
+        return (!grid.getHoldsBlock(I_left - 1, J_under) && !grid.getHoldsBlock(I_left - 1, J_under - 1));
     }
 }
