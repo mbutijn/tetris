@@ -27,79 +27,27 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	boolean IsBelowOccupied() {
-		if (type == Sort.ONE_BY_FOUR){
-			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
-			return bf.checkBelow(grid, orientation);
-		} else if (type == Sort.TWO_BY_TWO) {
-			BlockFormation_2b2 bf = (BlockFormation_2b2) this;
-			return bf.checkBelow(grid);
-		} else if (type == Sort.L){
-			BlockFormation_L bf = (BlockFormation_L) this;
-			return bf.checkBelow(grid, orientation);
-		} else if (type == Sort.T) {
-			BlockFormation_T bf = (BlockFormation_T) this;
-			return bf.checkBelow(grid, orientation);
-		}  else if (type == Sort.S) {
-			BlockFormation_S bf = (BlockFormation_S) this;
-			return bf.checkBelow(grid, orientation);
-		} else if (type == Sort.Z) {
-			BlockFormation_Z bf = (BlockFormation_Z) this;
-			return bf.checkBelow(grid, orientation);
-		} else {
-			BlockFormation_J bf = (BlockFormation_J) this;
-			return bf.checkBelow(grid, orientation);
-		}
-	}
+	boolean canMove(int right, int down) {
+		ArrayList<Block> selectedBlocks = new ArrayList<>();
 
-	boolean IsRightFree() {
-		if (type == Sort.ONE_BY_FOUR) {
-			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
-			return bf.checkRight(grid, orientation);
-		} else if (type == Sort.TWO_BY_TWO) {
-			BlockFormation_2b2 bf = (BlockFormation_2b2) this;
-			return bf.checkRight(grid);
-		} else if (type == Sort.L) {
-			BlockFormation_L bf = (BlockFormation_L) this;
-			return bf.checkRight(grid, orientation);
-		} else if (type == Sort.T){
-			BlockFormation_T bf = (BlockFormation_T) this;
-			return bf.checkRight(grid, orientation);
-		} else if (type == Sort.S) {
-			BlockFormation_S bf = (BlockFormation_S) this;
-			return bf.checkRight(grid, orientation);
-		} else if (type == Sort.Z) {
-			BlockFormation_Z bf = (BlockFormation_Z) this;
-			return bf.checkRight(grid, orientation);
-		} else {
-			BlockFormation_J bf = (BlockFormation_J) this;
-			return bf.checkRight(grid, orientation);
+		outerloop:
+		for (Block block_outer : blockList) {
+			// Check if any blocks from this formation is right of the block from the outer loop
+			for (Block block_inner : blockList){
+				if (block_inner.geti() == block_outer.geti() + right && block_inner.getj() == block_outer.getj() + down) {
+					continue outerloop;
+				}
+			}
+			selectedBlocks.add(block_outer);
 		}
-	}
 
-	boolean IsLeftFree() {
-		if (type == Sort.ONE_BY_FOUR) {
-			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
-			return bf.checkLeft(grid, orientation);
-		} else if (type == Sort.TWO_BY_TWO) {
-			BlockFormation_2b2 bf = (BlockFormation_2b2) this;
-			return bf.checkLeft(grid);
-		} else if (type == Sort.L) {
-			BlockFormation_L bf = (BlockFormation_L) this;
-			return bf.checkLeft(grid, orientation);
-		} else if (type == Sort.T){
-			BlockFormation_T bf = (BlockFormation_T) this;
-			return bf.checkLeft(grid, orientation);
-		} else if (type == Sort.S) {
-			BlockFormation_S bf = (BlockFormation_S) this;
-			return bf.checkLeft(grid, orientation);
-		} else if (type == Sort.Z) {
-			BlockFormation_Z bf = (BlockFormation_Z) this;
-			return bf.checkLeft(grid, orientation);
-		} else {
-			BlockFormation_J bf = (BlockFormation_J) this;
-			return bf.checkLeft(grid, orientation);
+		// Check availability to move for each selected block
+		for (Block block_selected : selectedBlocks) {
+			if (grid.getHoldsBlock(block_selected.geti() + right, block_selected.getj() + down)){
+				return false;
+			}
 		}
+		return true;
 	}
 
 	void moveOneTile(Direction direction) {
@@ -131,7 +79,7 @@ class BlockFormation extends ArrayList<Block> {
 		}
 	}
 
-	void rotate_bl() {
+	void rotate() {
 		updateBlockMatrix(grid, false);
 
 		if (type == Sort.ONE_BY_FOUR) {
@@ -173,6 +121,10 @@ class BlockFormation extends ArrayList<Block> {
 
 	void setWidthIndices(int[] widthIndices) {
 		this.widthIndices = widthIndices;
+	}
+
+	int[] getWidthIndices() {
+		return widthIndices;
 	}
 
 	void setHeightIndices(int[] heightIndices) {

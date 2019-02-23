@@ -67,7 +67,9 @@ public class Field extends JFrame implements KeyListener {
 			greyBoxes.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
 
 			if (count >= dropPeriod){ // normally runs every 250 miliseconds
-				if (blockFormation.IsBelowOccupied()){ // blockformation can not move down anymore
+				if (blockFormation.canMove(0, 1)){ // blockformation can still move down
+					blockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
+				} else {
 					// move the blocks from the current blockformation to layDownBlocks
 					blockFormation.layDownBlocks(Field.this);
 
@@ -82,8 +84,7 @@ public class Field extends JFrame implements KeyListener {
 
 					// overwrite "blockFormation" with a new instance
 					blockFormation = makeNewBlockFormation(grid);
-				} else {
-					blockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
+
 				}
 				count = 0;
 			}
@@ -93,6 +94,7 @@ public class Field extends JFrame implements KeyListener {
 	private BlockFormation makeNewBlockFormation(Grid grid){
 		BlockFormation blockFormation;
 		double select = Math.random();
+		//double select = 0.3;
 		if(select < 1.0/7.0){
 			blockFormation = new BlockFormation_1b4(grid);
 		} else if(select < 2.0/7.0){
@@ -166,15 +168,15 @@ public class Field extends JFrame implements KeyListener {
 	public void keyPressed(KeyEvent event) {
         int code = event.getKeyCode();
         if (code == KeyEvent.VK_DOWN) {
-            if (!blockFormation.IsBelowOccupied()){
+            if (blockFormation.canMove(0, 1)){
                 blockFormation.moveOneTile(Direction.DOWN);
             }
         } else if (code == KeyEvent.VK_RIGHT) {
-            if (blockFormation.IsRightFree()){
+            if (blockFormation.canMove(1, 0)){
                 blockFormation.moveOneTile(Direction.RIGHT);
             }
         } else if (code == KeyEvent.VK_LEFT){
-            if (blockFormation.IsLeftFree()){
+            if (blockFormation.canMove(-1, 0)){
                 blockFormation.moveOneTile(Direction.LEFT);
             }
         } else if (code == KeyEvent.VK_ESCAPE){
@@ -184,7 +186,7 @@ public class Field extends JFrame implements KeyListener {
                 timer.start();
             }
         } else if (code == KeyEvent.VK_SPACE){
-            blockFormation.rotate_bl();
+            blockFormation.rotate();
         } else if (code == KeyEvent.VK_F){
             if (dropPeriod > 1){
                 dropPeriod--;

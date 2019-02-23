@@ -10,16 +10,4 @@ class BlockFormation_2b2 extends BlockFormation {
         color = new Color(240, 240, 10);
         type = Sort.TWO_BY_TWO;
     }
-
-    boolean checkBelow(Grid grid) {
-        return (grid.getHoldsBlock(I_left, J_under + 1) || grid.getHoldsBlock(I_left + 1, J_under + 1));
-    }
-
-    boolean checkRight(Grid grid) {
-        return (!grid.getHoldsBlock(I_left + 2, J_under) && !grid.getHoldsBlock(I_left + 2, J_under - 1));
-    }
-
-    boolean checkLeft(Grid grid) {
-        return (!grid.getHoldsBlock(I_left - 1, J_under) && !grid.getHoldsBlock(I_left - 1, J_under - 1));
-    }
 }

@@ -10,42 +10,6 @@ class BlockFormation_J extends BlockFormation{
         type = Sort.J;
     }
 
-    boolean checkBelow(Grid grid, Orientation orientation) {
-        if (orientation == Orientation.FIRST) {
-            return (grid.getHoldsBlock(I_left, J_under + 1) || grid.getHoldsBlock(I_left + 1, J_under + 1));
-        } else if (orientation == Orientation.SECOND) {
-            return (grid.getHoldsBlock(I_left, J_under) || grid.getHoldsBlock(I_left + 1, J_under) || grid.getHoldsBlock(I_left + 2, J_under + 1));
-        } else if (orientation == Orientation.THIRD) {
-            return (grid.getHoldsBlock(I_left, J_under + 1) || grid.getHoldsBlock(I_left + 1, J_under - 1));
-        } else {
-            return (grid.getHoldsBlock(I_left, J_under + 1) || grid.getHoldsBlock(I_left + 1, J_under + 1) || grid.getHoldsBlock(I_left + 2, J_under + 1));
-        }
-    }
-
-    boolean checkRight(Grid grid, Orientation orientation) {
-        if (orientation == Orientation.FIRST) {
-            return (!grid.getHoldsBlock(I_left + 2, J_under - 2) && !grid.getHoldsBlock(I_left + 2, J_under - 1) && !grid.getHoldsBlock(I_left + 2, J_under));
-        } else if (orientation == Orientation.SECOND){
-            return (!grid.getHoldsBlock(I_left + 3, J_under) && !grid.getHoldsBlock(I_left + 3, J_under - 1));
-        } else if (orientation == Orientation.THIRD){
-            return (!grid.getHoldsBlock(I_left + 2, J_under - 2) && !grid.getHoldsBlock(I_left + 1, J_under - 1) && !grid.getHoldsBlock(I_left + 1, J_under));
-        } else {
-            return (!grid.getHoldsBlock(I_left + 3, J_under) && !grid.getHoldsBlock(I_left + 1, J_under - 1));
-        }
-    }
-
-    boolean checkLeft(Grid grid, Orientation orientation) {
-        if (orientation == Orientation.FIRST) {
-            return (!grid.getHoldsBlock(I_left - 1, J_under) && !grid.getHoldsBlock(I_left, J_under - 1) && !grid.getHoldsBlock(I_left, J_under - 2));
-        } else if (orientation == Orientation.SECOND){
-            return (!grid.getHoldsBlock(I_left - 1, J_under - 1) && !grid.getHoldsBlock(I_left + 1, J_under));
-        } else if (orientation == Orientation.THIRD){
-            return (!grid.getHoldsBlock(I_left - 1, J_under) && !grid.getHoldsBlock(I_left - 1, J_under - 1) && !grid.getHoldsBlock(I_left - 1, J_under - 2));
-        } else {
-            return (!grid.getHoldsBlock(I_left - 1, J_under) && !grid.getHoldsBlock(I_left - 1, J_under - 1));
-        }
-    }
-
     Orientation rotate(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST) {
             if (!grid.getHoldsBlock(I_left + 2, J_under) && !grid.getHoldsBlock(I_left + 2, J_under - 1)) {

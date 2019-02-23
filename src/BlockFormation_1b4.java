@@ -11,32 +11,6 @@ class BlockFormation_1b4 extends BlockFormation {
         type = Sort.ONE_BY_FOUR;
     }
 
-    boolean checkBelow(Grid grid, Orientation orientation) {
-        if (orientation == Orientation.FIRST) {
-            return grid.getHoldsBlock(I_left, J_under + 1) || grid.getHoldsBlock(I_left + 1, J_under + 1) ||
-                    grid.getHoldsBlock(I_left + 2, J_under + 1) || grid.getHoldsBlock(I_left + 3, J_under + 1);
-        } else {
-            return grid.getHoldsBlock(I_left + 1, J_under + 1);
-        }
-    }
-
-    boolean checkRight(Grid grid, Orientation orientation) {
-        if (orientation == Orientation.FIRST) {
-            return !grid.getHoldsBlock(I_left + 4, J_under);
-        } else {
-            return !grid.getHoldsBlock(I_left + 2, J_under - 3) && !grid.getHoldsBlock(I_left + 2, J_under - 2) &&
-                    !grid.getHoldsBlock(I_left + 2, J_under - 1) && !grid.getHoldsBlock(I_left + 2, J_under);
-        }
-    }
-
-    boolean checkLeft(Grid grid, Orientation orientation) {
-        if (orientation == Orientation.FIRST) {
-            return !grid.getHoldsBlock(I_left - 1, J_under);
-        } else {
-            return !grid.getHoldsBlock(I_left, J_under - 3) && !grid.getHoldsBlock(I_left, J_under - 2) && !grid.getHoldsBlock(I_left, J_under - 1) && !grid.getHoldsBlock(I_left, J_under);
-        }
-    }
-
     Orientation rotate(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST){
             if (J_under > 3 && J_under < Grid.heightNumber) {
