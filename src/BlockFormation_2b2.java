@@ -7,7 +7,7 @@ class BlockFormation_2b2 extends BlockFormation {
         setWidthIndices(new int[]{0, 1, 0, 1});
         setHeightIndices(new int[]{-1, -1, 0, 0});
         J_under = 2;
-        color = new Color(240, 240, 10);
+        color = new Color(230, 230, 10);
         type = Sort.TWO_BY_TWO;
     }
 }

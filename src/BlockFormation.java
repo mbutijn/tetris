@@ -28,22 +28,16 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	boolean canMove(int right, int down) {
-		ArrayList<Block> selectedBlocks = new ArrayList<>();
-
 		outerloop:
 		for (Block block_outer : blockList) {
-			// Check if any blocks from this formation is right of the block from the outer loop
+			// Check if any blocks from this formation is in check-direction from block_outer
 			for (Block block_inner : blockList){
 				if (block_inner.geti() == block_outer.geti() + right && block_inner.getj() == block_outer.getj() + down) {
 					continue outerloop;
 				}
 			}
-			selectedBlocks.add(block_outer);
-		}
-
-		// Check availability to move for each selected block
-		for (Block block_selected : selectedBlocks) {
-			if (grid.getHoldsBlock(block_selected.geti() + right, block_selected.getj() + down)){
+			// return false when occupied
+			if (grid.getHoldsBlock(block_outer.geti() + right, block_outer.getj() + down)){
 				return false;
 			}
 		}
@@ -105,7 +99,7 @@ class BlockFormation extends ArrayList<Block> {
 		updateBlockMatrix(grid, true);
 	}
 
-	void setCoordinates() {
+	void updateCoordinatesPerBlock() {
 		for (Block block : blockList) {
 			block.seti(I_left + widthIndices[blockList.indexOf(block)]);
 			block.setj(J_under + heightIndices[blockList.indexOf(block)]);
@@ -121,10 +115,6 @@ class BlockFormation extends ArrayList<Block> {
 
 	void setWidthIndices(int[] widthIndices) {
 		this.widthIndices = widthIndices;
-	}
-
-	int[] getWidthIndices() {
-		return widthIndices;
 	}
 
 	void setHeightIndices(int[] heightIndices) {

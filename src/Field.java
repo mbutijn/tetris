@@ -235,7 +235,7 @@ public class Field extends JFrame implements KeyListener {
 				}
 			}
 
-			blockFormation.setCoordinates();
+			blockFormation.updateCoordinatesPerBlock();
 			blockFormation.render(g2d);
 
 			for (Block groundBlock : groundBlocks){

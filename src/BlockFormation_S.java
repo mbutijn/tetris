@@ -6,7 +6,7 @@ class BlockFormation_S extends BlockFormation{
         setWidthIndices(new int[]{0, 1, 1, 2});
         setHeightIndices(new int[]{0, 0, -1, -1});
         J_under = 2;
-        color = new Color(230, 20, 20);
+        color = new Color(250, 70, 70);
         type = Sort.S;
     }
 

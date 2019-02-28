@@ -7,7 +7,7 @@ class BlockFormation_1b4 extends BlockFormation {
         setWidthIndices(new int[] {0, 1, 2, 3});
         setHeightIndices(new int[] {0, 0, 0, 0});
         J_under = 1;
-        color = new Color(0, 235, 235);
+        color = new Color(0, 210, 210);
         type = Sort.ONE_BY_FOUR;
     }
 
