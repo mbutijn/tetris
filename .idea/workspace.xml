@@ -8,6 +8,33 @@
   <component name="ChangeListManager">
     <list default="true" id="adad5567-6a3a-4711-8d00-6319db046543" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Game.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Block.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Block.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_1b4.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_1b4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_2b2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_2b2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_J.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_J.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_L.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_L.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_S.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_S.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_T.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_T.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/BlockFormation_Z.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/BlockFormation_Z.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Field$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Field$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Field$CustomComparator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Field$GreyBoxes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Field.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Field.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Grid.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Grid.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_1b4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_1b4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_2b2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_2b2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_J.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_J.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_L.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_L.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_S.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_S.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_T.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_T.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BlockFormation_Z.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BlockFormation_Z.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Field.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grid.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tetris" beforeDir="false" afterPath="$PROJECT_DIR$/tetris" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tetris/.classpath" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tetris/.idea/compiler.xml" beforeDir="false" />

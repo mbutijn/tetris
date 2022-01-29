@@ -1,29 +1,29 @@
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 class BlockFormation extends ArrayList<Block> {
 
 	private static final long serialVersionUID = 1L;
-	private List<Block> blockList = new ArrayList<>();
+	private final List<Block> blockList = new ArrayList<>();
 	private Orientation orientation;
-	private Grid grid;
+	private final Grid grid;
 	int[] widthIndices, heightIndices;
 	int I_left, J_under;
 	Sort type;
-	Color color;
+	public int index;
 
-	BlockFormation(Grid grid){
+	BlockFormation(Grid grid, int index){
 		this.I_left = (int) Math.round(1 + Math.random()*(Grid.widthNumber - 5));
 		this.orientation = Orientation.FIRST;
 		this.grid = grid;
+		this.index = index;
 	}
 
 	void makeBlockList(Grid grid){
 		for (int k = 0; k < 4; k++) {
-			Block block = new Block(widthIndices[k], heightIndices[k], color);
+			Block block = new Block(widthIndices[k], heightIndices[k]);
 			blockList.add(block);
-			grid.setHoldsBlock(I_left + block.geti(), J_under + block.getj(), true);
+			grid.setHoldsBlock(I_left + block.geti(), J_under + block.getj(), index);
 		}
 	}
 
@@ -37,7 +37,7 @@ class BlockFormation extends ArrayList<Block> {
 				}
 			}
 			// return false when occupied
-			if (grid.getHoldsBlock(block_outer.geti() + right, block_outer.getj() + down)){
+			if (grid.getHoldsBlock(block_outer.geti() + right, block_outer.getj() + down) != 0){
 				return false;
 			}
 		}
@@ -45,7 +45,7 @@ class BlockFormation extends ArrayList<Block> {
 	}
 
 	void moveOneTile(Direction direction) {
-		updateBlockMatrix(grid, false);
+		updateBlockMatrix(grid, 0);
 
 		if (direction == Direction.RIGHT) {
 			I_left++;
@@ -54,27 +54,17 @@ class BlockFormation extends ArrayList<Block> {
 		} else if (direction == Direction.DOWN) {
 			J_under++;
 		}
-		updateBlockMatrix(grid, true);
+		updateBlockMatrix(grid, index);
 	}
 
-	private void updateBlockMatrix(Grid grid, boolean occupied) {
+	private void updateBlockMatrix(Grid grid, int index) {
 		for (Block block : blockList) {
-			grid.setHoldsBlock(I_left + widthIndices[blockList.indexOf(block)], J_under + heightIndices[blockList.indexOf(block)], occupied);
-		}
-	}
-
-	void layDownBlocks(Field field) {
-		for (Block block : blockList) {
-			field.groundBlocks.add(block);
-			if (block.getj() == 1) {
-				field.stopGame();
-				break;
-			}
+			grid.setHoldsBlock(I_left + widthIndices[blockList.indexOf(block)], J_under + heightIndices[blockList.indexOf(block)], index);
 		}
 	}
 
 	void rotate() {
-		updateBlockMatrix(grid, false);
+		updateBlockMatrix(grid, 0);
 
 		if (type == Sort.ONE_BY_FOUR) {
 			BlockFormation_1b4 bf = (BlockFormation_1b4) this;
@@ -96,20 +86,13 @@ class BlockFormation extends ArrayList<Block> {
 			orientation = bf.rotate(grid, orientation);
 		}
 
-		updateBlockMatrix(grid, true);
+		updateBlockMatrix(grid, index);
 	}
 
 	void updateCoordinatesPerBlock() {
 		for (Block block : blockList) {
 			block.seti(I_left + widthIndices[blockList.indexOf(block)]);
 			block.setj(J_under + heightIndices[blockList.indexOf(block)]);
-		}
-	}
-
-	void render(Graphics graphics) {
-		for (Block block : blockList) {
-			block.updatePosition();
-			block.render(graphics);
 		}
 	}
 

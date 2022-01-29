@@ -1,19 +1,16 @@
-import java.awt.*;
-
 class BlockFormation_L extends BlockFormation{
 
     BlockFormation_L(Grid grid) {
-        super(grid);
+        super(grid,4);
         setWidthIndices(new int[]{0, 0, 0, 1});
         setHeightIndices(new int[]{-2, -1, 0, 0});
         J_under = 3;
-        color = new Color(230, 140, 20);
         type = Sort.L;
     }
 
     Orientation rotate(Grid grid, Orientation orientation) {
         if (orientation == Orientation.FIRST) {
-            if (!grid.getHoldsBlock(I_left + 2, J_under) && !grid.getHoldsBlock(I_left + 2, J_under - 1)) {
+            if (grid.getHoldsBlock(I_left + 2, J_under) == 0 && grid.getHoldsBlock(I_left + 2, J_under - 1) == 0) {
                 widthIndices = new int[]{0, 1, 2, 2};
                 heightIndices = new int[]{0, 0, 0, -1};
                 return Orientation.SECOND;
@@ -25,7 +22,7 @@ class BlockFormation_L extends BlockFormation{
             heightIndices = new int[]{-2, -2, -1, 0};
             return Orientation.THIRD;
         } else if (orientation == Orientation.THIRD) {
-            if (!grid.getHoldsBlock(I_left + 2, J_under - 1)) {
+            if (grid.getHoldsBlock(I_left + 2, J_under - 1) == 0) {
                 widthIndices = new int[]{0, 0, 1, 2};
                 heightIndices = new int[]{0, -1, -1, -1};
                 return Orientation.FOURTH;

@@ -1,12 +1,9 @@
-import java.awt.*;
-
 class BlockFormation_Z extends BlockFormation{
     BlockFormation_Z(Grid grid) {
-        super(grid);
+        super(grid,7);
         setWidthIndices(new int[]{0, 1, 1, 2});
         setHeightIndices(new int[]{-1, -1, 0, 0});
         J_under = 2;
-        color = new Color(30, 190, 20);
         type = Sort.Z;
     }
 
@@ -16,7 +13,7 @@ class BlockFormation_Z extends BlockFormation{
             heightIndices = new int[]{0, -1, -1, -2};
             return Orientation.SECOND;
         } else {
-            if (!grid.getHoldsBlock(I_left + 2, J_under)) {
+            if (grid.getHoldsBlock(I_left + 2, J_under) == 0) {
                 widthIndices = new int[]{0, 1, 1, 2};
                 heightIndices = new int[]{-1, -1, 0, 0};
                 return Orientation.FIRST;

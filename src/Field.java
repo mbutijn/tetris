@@ -1,28 +1,26 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class Field extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1L;
-	private Grid grid = new Grid(30, 2, 13, 21);
-	private GreyBoxes greyBoxes = new GreyBoxes();
+	private final Grid grid = new Grid(30, 2, 13, 21);
+	private final GreyTiles greyTiles = new GreyTiles();
 	private BlockFormation blockFormation = makeNewBlockFormation(grid);
 	private Timer timer;
-	private JTextField scoreField = new JTextField("0", 4);
+	private final JTextField scoreField = new JTextField("0", 4);
 	private final int TIMER_PERIOD = 25; // ms
 	private int dropPeriod = 10;
 	int points;
-	ArrayList<Block> groundBlocks = new ArrayList<>();
-	ArrayList<Integer> removeIndices = new ArrayList<>();
 	JTextArea highscore = new JTextArea("0", 0, 0);
+	public static Color[] colors =  {new Color(0, 210, 210), new Color(230, 230, 10), new Color(80, 80, 255),
+			new Color(230, 140, 20), new Color(250, 70, 70), new Color(230, 80, 230), new Color(30, 190, 20)};
 
 	Field(){
-		setContentPane(greyBoxes);
+		setContentPane(greyTiles);
 		setKeyBoardListeners();
 		setResizable(false);
 		setLayout(new BorderLayout());
@@ -60,27 +58,21 @@ public class Field extends JFrame implements KeyListener {
 		timer.start();
 	}
 
-	private ActionListener run = new ActionListener() {
+	private final ActionListener run = new ActionListener() {
 		private int count = 0;
 		public void actionPerformed(ActionEvent evt) { // runs every 25 miliseconds
 			count++;
-			greyBoxes.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
+			greyTiles.paintImmediately(new Rectangle(0, 0, Game.xBound, Game.yBound));
 
 			if (count >= dropPeriod){ // normally runs every 250 miliseconds
-				if (blockFormation.canMove(0, 1)){ // blockformation can still move down
-					blockFormation.moveOneTile(Direction.DOWN); // move the blockformation down one tile
+				if (blockFormation.canMove(0, 1)){ // blockFormation can still move down
+					blockFormation.moveOneTile(Direction.DOWN); // move the blockFormation down one tile
 				} else {
-					// move the blocks from the current blockformation to layDownBlocks
-					blockFormation.layDownBlocks(Field.this);
-
-					grid.updateFullRowIndices();
-					grid.removeLines(Field.this);
-					updateScore(grid.fullRowIndices.size()); // update the score for the player
-
-					if(!removeIndices.isEmpty()){
-						removeEveryBlock();
-						dropGroundBlocks();
+					if (grid.checkLost()){
+						stopGame();
 					}
+					int rowsCleared = grid.clearFullRows(); // clear the full rows
+					updateScore(rowsCleared); // update the score for the player
 
 					// overwrite "blockFormation" with a new instance
 					blockFormation = makeNewBlockFormation(grid);
@@ -114,34 +106,6 @@ public class Field extends JFrame implements KeyListener {
 		blockFormation.makeBlockList(grid);
 
 		return blockFormation;
-	}
-
-	private void removeEveryBlock() {
-		int numberGroundBlocks = groundBlocks.size();
-		int gapSize = 0;
-		Collections.sort(removeIndices);
-
-		for (int groundBlockIndex = 0; groundBlockIndex < numberGroundBlocks; groundBlockIndex++) {
-			if (!removeIndices.isEmpty()) {
-				if (groundBlockIndex == removeIndices.get(0)) {
-					groundBlocks.remove(gapSize);
-					removeIndices.remove(0);
-				} else {
-					gapSize++;
-				}
-			}
-		}
-		Collections.sort(groundBlocks, new CustomComparator());
-	}
-
-	private void dropGroundBlocks() {
-		for (int fullRowIndex = 0; fullRowIndex < grid.fullRowIndices.size(); fullRowIndex++){
-			for (Block groundBlock : groundBlocks){
-				if (groundBlock.getj() < grid.fullRowIndices.get(fullRowIndex)){
-					groundBlock.drop(grid);
-				}
-			}
-		}
 	}
 
 	private void setKeyBoardListeners() {
@@ -212,8 +176,9 @@ public class Field extends JFrame implements KeyListener {
 		Game.saveScore(this);
 	}
 
-	class GreyBoxes extends JPanel {
+	class GreyTiles extends JPanel {
 		private static final long serialVersionUID = 1L;
+		float [] contour = {0.4f, 1.0f};
 
 		@Override
 		protected void paintComponent(Graphics graphics){
@@ -223,32 +188,31 @@ public class Field extends JFrame implements KeyListener {
 			for(int i = 1; i< Grid.widthNumber + 1; i++){
 				for(int j = 1; j < Grid.heightNumber + 1; j++){
 					if (false) { // Makes background tiles red and green
-						if (grid.getHoldsBlock(i, j)) { // red for occupied
-							g2d.setColor(grid.color_occupied);
-						} else { // green for free
+						if (grid.getHoldsBlock(i, j) == 0) { // green for free
 							g2d.setColor(grid.color_free);
+						} else { // red for occupied
+							g2d.setColor(grid.color_occupied);
 						}
 					} else { // Makes all background tiles grey
 						g2d.setColor(grid.color);
 					}
-					g2d.fillRect(i*Grid.getEdgeLength(), j*Grid.getEdgeLength(), Grid.getEdgeLength() - 2*Grid.getSpacing(), Grid.getEdgeLength() - 2*Grid.getSpacing());
+					int x = i*Grid.getEdgeLength();
+					int y = j*Grid.getEdgeLength();
+
+					g2d.fillRect(x, y, Grid.getEdgeLength() - 2*Grid.getSpacing(), Grid.getEdgeLength() - 2*Grid.getSpacing());
+
+					// Draw all blocks
+					int block = grid.getHoldsBlock(i, j);
+					if (block > 0) {
+						Color[] colors = {Field.colors[block - 1], Color.BLACK};
+						Point2D center = new Point2D.Float(x+Grid.getSpacing(), y+Grid.getSpacing());
+						g2d.setPaint(new RadialGradientPaint(center, (float) (1.2 * Grid.getEdgeLength()), contour, colors));
+						g2d.fillRect(x+Grid.getSpacing(), y+Grid.getSpacing(), Grid.getEdgeLength() - 4*Grid.getSpacing(), Grid.getEdgeLength() - 4*Grid.getSpacing());
+					}
 				}
 			}
 
 			blockFormation.updateCoordinatesPerBlock();
-			blockFormation.render(g2d);
-
-			for (Block groundBlock : groundBlocks){
-				groundBlock.updatePosition();
-				groundBlock.render(g2d);
-			}
-		}
-	}
-
-	public class CustomComparator implements Comparator<Block> {
-		@Override
-		public int compare(Block block1, Block block2) {
-			return block2.getj().compareTo(block1.getj());
 		}
 	}
 

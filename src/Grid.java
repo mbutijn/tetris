@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.ArrayList;
 
 public class Grid {
 
@@ -8,64 +7,72 @@ public class Grid {
 	Color color_free = new Color(50, 200, 50);
 	private static int edgeLength, spacing;
 	static int widthNumber, heightNumber;
-	ArrayList<Integer> fullRowIndices = new ArrayList<>();
-	private boolean [][] blockMatrix;
+	private final int [][] blockMatrix;
 
 	Grid(int edgeLength, int spacing, int widthNumber, int heightNumber){
 		Grid.edgeLength = edgeLength;
 		Grid.spacing = spacing;
 		Grid.widthNumber = widthNumber;
 		Grid.heightNumber = heightNumber;
-		blockMatrix = new boolean[heightNumber + 2][widthNumber + 3];
+		blockMatrix = new int[heightNumber + 2][widthNumber + 3];
 
 		for(int row = 1; row < Grid.heightNumber + 1; row++) {
-			setHoldsBlock(Grid.widthNumber + 1, row, true);
-			setHoldsBlock(Grid.widthNumber + 2, row, true);
-			setHoldsBlock(0, row, true);
+			setHoldsBlock(Grid.widthNumber + 1, row, 1);
+			setHoldsBlock(Grid.widthNumber + 2, row, 1);
+			setHoldsBlock(0, row, 1);
 		}
 
 		for(int collumn = 1; collumn < Grid.widthNumber + 1; collumn++) {
-			setHoldsBlock(collumn, Grid.heightNumber + 1, true);
+			setHoldsBlock(collumn, Grid.heightNumber + 1, 1);
 		}
 	}
 
-	void updateFullRowIndices() {
-		fullRowIndices.clear();
-		for(int rowIndex = 0; rowIndex < heightNumber + 1; rowIndex++){
-			if(checkLineFull(rowIndex)){
-				fullRowIndices.add(rowIndex);
+	int clearFullRows() {
+		int rowsCleared = 0;
+		for (int rowIndex = 0; rowIndex < heightNumber + 1; rowIndex++) {
+			if (checkLineFull(rowIndex)) {
+				rowsCleared++;
+
+				for (int rowAbove = rowIndex-1; rowAbove > 0; rowAbove--) {
+					moveRowDown(rowAbove);
+				}
+				setRow(1, new int[widthNumber + 3]);
 			}
 		}
+		return rowsCleared;
+	}
+
+	private void moveRowDown(int rowAbove) {
+		int [] blocks = getRow(rowAbove);
+		setRow(rowAbove+1, blocks);
 	}
 
 	private boolean checkLineFull(int row){
-		for (boolean b: blockMatrix[row])
-			if (!b) return false;
+		for (int column: blockMatrix[row])
+			if (column == 0) return false;
 		return true;
 	}
 
-	void removeLines(Field field) {
-		field.removeIndices.clear();
-		for(int rowNumber : fullRowIndices){
-			for(Block groundBlock : field.groundBlocks){
-				if(groundBlock.getj() == rowNumber){
-					setHoldsBlock(groundBlock.geti(), groundBlock.getj(), false);
-					field.removeIndices.add(field.groundBlocks.indexOf(groundBlock));
-				}
-			}
-		}
+	public boolean checkLost(){
+		for (int column = 2; column < widthNumber -1; column++)
+			if(blockMatrix[1][column] != 0) return true;
+		return false;
 	}
 
-	void setHoldsBlock(int i, int j, boolean occupied){
-		blockMatrix[j][i] = occupied;
+	void setHoldsBlock(int i, int j, int index){
+		blockMatrix[j][i] = index;
 	}
 
-	boolean getHoldsBlock(int i, int j){
+	int getHoldsBlock(int i, int j){
 		return blockMatrix[j][i];
 	}
 
-	public void changeHoldsBlock(int i, int j){
-		blockMatrix[j][i] ^= true;
+	int [] getRow(int j){
+		return blockMatrix[j];
+	}
+
+	void setRow(int j, int [] row){
+		blockMatrix[j] = row;
 	}
 
 	static int getEdgeLength() {
